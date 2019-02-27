@@ -1,49 +1,38 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"os"
 
 	"github.com/ednesic/coursemanagement/handlers"
-	"github.com/ednesic/coursemanagement/middleware"
 	"github.com/ednesic/coursemanagement/services"
 	"github.com/ednesic/coursemanagement/servivemanager"
-	"github.com/gorilla/mux"
-	"github.com/urfave/negroni"
-	"go.uber.org/zap"
 )
 
 func main() {
 	var err error
+	e := echo.New()
+
 	servivemanager.CourseService, err = services.NewCourseService(os.Getenv("COURSE_DB_HOST"), os.Getenv("COURSE_DB"))
 
 	if err != nil {
-		log.Fatal("Could not resolve course service", zap.Error(err))
+		e.Logger.Fatal("Could not resolve course service", err)
 	}
 
-	srv := &http.Server{
-		Addr:    ":" + "9090",
-		Handler: initRoutes(),
-	}
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.RequestID())
+	e.Use(middleware.BodyLimit("2M"))
 
-	log.Fatal("Shutting down", srv.ListenAndServe())
+	//e.Server.ReadTimeout = time.Duration(1 * time.Second)
+	//e.Server.WriteTimeout= time.Duration(1 * time.Second)
+
+	e.GET("/courses/:name", handlers.GetCourse)
+	e.GET("/courses", handlers.GetCourses)
+	e.PUT("/courses", handlers.PutCourse)
+	e.POST("/courses", handlers.SetCourse)
+	e.DELETE("/courses/:name", handlers.DelCourse)
+
+	e.Logger.Fatal(e.Start(":9090"))
 }
-
-func initRoutes() *negroni.Negroni {
-	r := mux.NewRouter()
-	r.NewRoute().Path("/courses/{name}").Handler(middleware.Handler(handlers.GetCourse)).Methods(http.MethodGet)
-	r.NewRoute().Path("/courses/{name}").Handler(middleware.Handler(handlers.DelCourse)).Methods(http.MethodDelete)
-	r.NewRoute().Path("/courses").Handler(middleware.Handler(handlers.PutCourse)).Methods(http.MethodPut)
-	r.NewRoute().Path("/courses").Handler(middleware.Handler(handlers.GetCourses)).Methods(http.MethodGet)
-	r.NewRoute().Path("/courses").Handler(middleware.Handler(handlers.SetCourse)).Methods(http.MethodPost)
-	n := negroni.New(
-		//negroni.NewRecovery(),
-		//negroni.HandlerFunc(middleware.ContextClearerMiddleware),
-		middleware.NewLoggerMiddleware(),
-		)
-	n.UseHandler(r)
-
-	return n
-}
-

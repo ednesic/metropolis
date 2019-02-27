@@ -7,3 +7,7 @@ import (
 var (
 	ErrNotFound = mgo.ErrNotFound
 )
+
+type ErrorReponse struct {
+	Message string `json:"message,omitempty"`
+}
