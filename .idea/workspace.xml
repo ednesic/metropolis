@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b8e1de6f-2cc2-4af2-9324-298e89c7c195" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/handlers/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/course.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/course_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/course_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,7 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageViewManager">
-    <option name="myElementSize" value="316" />
+    <option name="myElementSize" value="354" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -25,32 +25,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/handlers/course_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="180" column="40" selection-start-line="180" selection-start-column="40" selection-end-line="180" selection-end-column="40" />
-              <folding>
-                <element signature="e#18#70#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/Cellar/go/1.12/libexec/src/errors/errors.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="8" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/handlers/course.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="67" column="6" selection-start-line="67" selection-start-column="6" selection-end-line="67" selection-end-column="6" />
+            <state relative-caret-position="924">
+              <caret line="75" column="45" selection-start-line="75" selection-start-column="39" selection-end-line="75" selection-end-column="45" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/handlers/course_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="83">
+              <caret line="332" column="19" lean-forward="true" selection-start-line="332" selection-start-column="19" selection-end-line="332" selection-end-column="19" />
+              <folding>
+                <element signature="e#18#70#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -60,6 +51,15 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
               <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/course.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-171">
+              <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -94,6 +94,7 @@
       <find>HTTPErrorHandler</find>
       <find>Repeatability</find>
       <find>optional</find>
+      <find>_</find>
     </findStrings>
     <replaceStrings>
       <replace>CourseStorageImpl</replace>
@@ -133,6 +134,8 @@
         <option value="$PROJECT_DIR$/servivemanager/servicemanager.go" />
         <option value="$PROJECT_DIR$/services/course.go" />
         <option value="$PROJECT_DIR$/main.go" />
+        <option value="$PROJECT_DIR$/handlers/course_benchmark.go" />
+        <option value="$PROJECT_DIR$/handlers/course_bench.go" />
         <option value="$PROJECT_DIR$/handlers/course.go" />
         <option value="$PROJECT_DIR$/handlers/course_test.go" />
       </list>
@@ -146,10 +149,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="-2560" />
-    <option name="y" value="-180" />
-    <option name="width" value="2560" />
-    <option name="height" value="1080" />
+    <option name="width" value="1440" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -242,53 +243,55 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.Test_PutCourse in github.com/ednesic/coursemanagement/handlers">
-    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="coursemanagement" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/main.go" />
-      <package value="github.com/ednesic/coursemanagement" />
-      <directory value="$PROJECT_DIR$/" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Test.BenchmarkDelCourse in github.com/ednesic/coursemanagement/handlers">
+    <configuration name="BenchmarkDelCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
-      <framework value="gotest" />
+      <framework value="gobench" />
       <kind value="PACKAGE" />
       <package value="github.com/ednesic/coursemanagement/handlers" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestSetCourse$" />
+      <pattern value="^BenchmarkDelCourse$" />
       <method v="2" />
     </configuration>
-    <configuration name="Test_GetCourses in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="BenchmarkGetCourses in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
-      <framework value="gotest" />
+      <framework value="gobench" />
       <kind value="PACKAGE" />
       <package value="github.com/ednesic/coursemanagement/handlers" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^Test_GetCourses$" />
+      <pattern value="^BenchmarkGetCourses$" />
       <method v="2" />
     </configuration>
-    <configuration name="Test_PutCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
-      <framework value="gotest" />
+      <framework value="gobench" />
       <kind value="PACKAGE" />
       <package value="github.com/ednesic/coursemanagement/handlers" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^Test_PutCourse$" />
+      <pattern value="^BenchmarkPutCourse$" />
       <method v="2" />
     </configuration>
-    <configuration name="go test github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="BenchmarkSetCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
-      <framework value="gotest" />
+      <framework value="gobench" />
+      <kind value="PACKAGE" />
+      <package value="github.com/ednesic/coursemanagement/handlers" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^BenchmarkSetCourse$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="gobench github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="coursemanagement" />
+      <working_directory value="$PROJECT_DIR$/handlers" />
+      <framework value="gobench" />
       <kind value="PACKAGE" />
       <package value="github.com/ednesic/coursemanagement/handlers" />
       <directory value="$PROJECT_DIR$/" />
@@ -297,66 +300,67 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.Test_PutCourse in github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Test.TestSetCourse in github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Build.go build main.go" />
-        <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Test.Test_GetCourses in github.com/ednesic/coursemanagement/handlers" />
+        <item itemvalue="Go Test.BenchmarkDelCourse in github.com/ednesic/coursemanagement/handlers" />
+        <item itemvalue="Go Test.BenchmarkGetCourses in github.com/ednesic/coursemanagement/handlers" />
+        <item itemvalue="Go Test.BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" />
+        <item itemvalue="Go Test.BenchmarkSetCourse in github.com/ednesic/coursemanagement/handlers" />
+        <item itemvalue="Go Test.gobench github.com/ednesic/coursemanagement/handlers" />
       </list>
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 01m 26s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="Benchmark_GetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 01m 28s.xml">
+      <configuration name="Benchmark_GetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 01m 37s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="gobench_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 02m 08s.xml">
+      <configuration name="gobench github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 01m 51s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="gobench_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 08m 38s.xml">
+      <configuration name="gobench github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 01m 58s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 35m 13s.xml">
+      <configuration name="BenchmarkSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 08m 31s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 37m 45s.xml">
+      <configuration name="BenchmarkSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 08m 46s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 39m 43s.xml">
+      <configuration name="BenchmarkSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 09m 54s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkPutCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 42m 02s.xml">
+      <configuration name="BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 14m 32s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkPutCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 42m 57s.xml">
+      <configuration name="BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestSetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 15m 33s.xml">
-      <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkGetCourses_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 45m 02s.xml">
+      <configuration name="BenchmarkGetCourses in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Test_PutCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 11h 16m 17s.xml">
-      <configuration name="Test_PutCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BenchmarkDelCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.03.02 at 14h 46m 40s.xml">
+      <configuration name="BenchmarkDelCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2560" y="-180" width="2560" height="1080" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17911041" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15236051" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Performance Profiler" weight="0.739759" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32970297" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32574257" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3253012" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.32673267" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.39638555" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32891566" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.48192772" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="right" id="Coverage" side_tool="true" weight="0.3297568" />
+      <window_info anchor="right" id="Coverage" side_tool="true" weight="0.32904148" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -391,7 +395,12 @@
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/coursemanagement$go_test_github_com_ednesic_coursemanagement_handlers.out" NAME="go test github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551493842778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/coursemanagement$go_test_github_com_ednesic_coursemanagement_handlers.out" NAME="go test github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551536196564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/coursemanagement$BenchmarkPutCourse_in_github_com_ednesic_coursemanagement_handlers.out" NAME="BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551548558344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/coursemanagement$BenchmarkSetCourse_in_github_com_ednesic_coursemanagement_handlers.out" NAME="BenchmarkSetCourse in github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551548363981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/coursemanagement$gobench_github_com_ednesic_coursemanagement_handlers.out" NAME="gobench github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551546487713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/coursemanagement$BenchmarkGetCourses_in_github_com_ednesic_coursemanagement_handlers.out" NAME="BenchmarkGetCourses in github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551548673037" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/coursemanagement$BenchmarkDelCourse_in_github_com_ednesic_coursemanagement_handlers.out" NAME="BenchmarkDelCourse in github.com/ednesic/coursemanagement/handlers Coverage Results" MODIFIED="1551548768542" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -403,7 +412,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/log/spanlogger.go" />
     <entry file="file://$PROJECT_DIR$/tracing/http.go" />
     <entry file="file://$PROJECT_DIR$/tracing/init.go" />
     <entry file="file://$PROJECT_DIR$/../../../go.uber.org/zap/logger.go">
@@ -530,13 +538,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/course.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-42">
-          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/storage/mongodb/mongodb.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
@@ -582,13 +583,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/types/course.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../pkg/mod/github.com/labstack/echo/v4@v4.0.0/context.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
@@ -610,24 +604,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="28" column="59" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../pkg/mod/github.com/stretchr/testify@v1.3.0/mock/mock.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="123">
           <caret line="434" selection-start-line="434" selection-end-line="434" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/handlers/course.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="67" column="6" selection-start-line="67" selection-start-column="6" selection-end-line="67" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -638,10 +618,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/handlers/course_bench.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="37">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="33" selection-end-column="1" />
+          <folding>
+            <element signature="e#18#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/types/course.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/course.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-171">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="28" column="59" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handlers/course.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="924">
+          <caret line="75" column="45" selection-start-line="75" selection-start-column="39" selection-end-line="75" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/handlers/course_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="180" column="40" selection-start-line="180" selection-start-column="40" selection-end-line="180" selection-end-column="40" />
+        <state relative-caret-position="83">
+          <caret line="332" column="19" lean-forward="true" selection-start-line="332" selection-start-column="19" selection-end-line="332" selection-end-column="19" />
           <folding>
             <element signature="e#18#70#0" expanded="true" />
           </folding>

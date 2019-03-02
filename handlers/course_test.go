@@ -9,6 +9,7 @@ import (
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"gopkg.in/mgo.v2"
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +17,7 @@ import (
 	"testing"
 )
 
-func Test_GetCourse(t *testing.T) {
+func TestGetCourse(t *testing.T) {
 	type fields struct {
 		name string
 	}
@@ -59,7 +60,24 @@ func Test_GetCourse(t *testing.T) {
 	}
 }
 
-func Test_GetCourses(t *testing.T) {
+func BenchmarkGetCourse (b *testing.B) {
+	var courseServiceMngr = &services.CourseServiceMock{}
+	courseServiceMngr.On("FindOne", mock.Anything).Return(types.Course{Name: "bench"}, nil)
+	servicemanager.CourseService = courseServiceMngr
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/course", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("name")
+	c.SetParamValues("Bench")
+
+	for i := 0; i < b.N; i++ {
+		_ =  GetCourse(c)
+	}
+}
+
+func TestGetCourses(t *testing.T) {
 	type wants struct {
 		courses    []types.Course
 		err        error
@@ -98,6 +116,21 @@ func Test_GetCourses(t *testing.T) {
 			}
 			courseServiceMngr.AssertExpectations(t)
 		})
+	}
+}
+
+func BenchmarkGetCourses (b *testing.B) {
+	var courseServiceMngr = &services.CourseServiceMock{}
+	courseServiceMngr.On("FindAll").Return([]types.Course{}, nil)
+	servicemanager.CourseService = courseServiceMngr
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/course", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	for i := 0; i < b.N; i++ {
+		_ =  GetCourses(c)
 	}
 }
 
@@ -152,7 +185,24 @@ func TestSetCourse(t *testing.T) {
 	}
 }
 
-func Test_PutCourse(t *testing.T) {
+func BenchmarkSetCourse(b *testing.B) {
+	var courseServiceMngr = &services.CourseServiceMock{}
+	courseServiceMngr.On("Create", mock.Anything).Return(nil)
+	servicemanager.CourseService = courseServiceMngr
+
+	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewUrlVideo: "bench"})
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/course", strings.NewReader(string(out)))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	for i := 0; i < b.N; i++ {
+		_ = SetCourse(c)
+	}
+}
+
+func TestPutCourse(t *testing.T) {
 	type wants struct {
 		err error
 		statusCode int
@@ -203,7 +253,24 @@ func Test_PutCourse(t *testing.T) {
 	}
 }
 
-func Test_DelCourse(t *testing.T) {
+func BenchmarkPutCourse(b *testing.B) {
+	var courseServiceMngr = &services.CourseServiceMock{}
+	courseServiceMngr.On("Update", mock.Anything).Return(nil)
+	servicemanager.CourseService = courseServiceMngr
+
+	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewUrlVideo: "bench"})
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPut, "/course", strings.NewReader(string(out)))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	for i := 0; i < b.N; i++ {
+		_ =  PutCourse(c)
+	}
+}
+
+func TestDelCourse(t *testing.T) {
 	type fields struct {
 		name string
 	}
@@ -238,5 +305,23 @@ func Test_DelCourse(t *testing.T) {
 			assert.Equal(t, tt.want.statusCode, rec.Code)
 			courseServiceMngr.AssertExpectations(t)
 		})
+	}
+}
+
+
+func BenchmarkDelCourse (b *testing.B) {
+	var courseServiceMngr = &services.CourseServiceMock{}
+	courseServiceMngr.On("Delete", mock.Anything).Return(nil)
+	servicemanager.CourseService = courseServiceMngr
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodDelete, "/course", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("name")
+	c.SetParamValues("Bench")
+
+	for i := 0; i < b.N; i++ {
+		_ =  DelCourse(c)
 	}
 }
