@@ -40,13 +40,11 @@ func GetCourses(c echo.Context) error {
 func SetCourse(c echo.Context) error {
 	var course types.Course
 
-	err := c.Bind(&course)
-	if err != nil {
-		_ = c.NoContent(http.StatusBadRequest)
+	if err := c.Bind(&course); err != nil {
 		return err
 	}
 
-	err = servicemanager.CourseService.Create(course)
+	err := servicemanager.CourseService.Create(course)
 	if err == nil {
 		return c.JSON(http.StatusCreated, course)
 	}
@@ -58,13 +56,11 @@ func SetCourse(c echo.Context) error {
 func PutCourse(c echo.Context) error {
 	var course types.Course
 
-	err := c.Bind(&course)
-	if err != nil {
-		_ = c.NoContent(http.StatusBadRequest)
-		return  err
+	if err := c.Bind(&course); err != nil {
+		return err
 	}
 
-	err = servicemanager.CourseService.Update(course)
+	err := servicemanager.CourseService.Update(course)
 	if err == nil {
 		return c.JSON(http.StatusCreated, course)
 	}
