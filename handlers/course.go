@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/ednesic/coursemanagement/servivemanager"
+	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/labstack/echo/v4"
@@ -10,25 +10,22 @@ import (
 
 func GetCourse(c echo.Context) error {
 	name := c.Param("name")
-	course, err := servivemanager.CourseService.FindOne(name)
+	course, err := servicemanager.CourseService.FindOne(name)
 	httpStatus := http.StatusOK
 
 	if err == nil {
 		return c.JSON(httpStatus, course)
 	}
-
 	httpStatus = http.StatusInternalServerError
 	if err == storage.ErrNotFound {
 		httpStatus = http.StatusNotFound
 	}
-	if err := c.JSON(httpStatus, storage.ErrorReponse{ Message: "Failed to get course" }); err != nil {
-		return err
-	}
+	_ = c.NoContent(httpStatus)
 	return err
 }
 
 func GetCourses(c echo.Context) error {
-	courses, err := servivemanager.CourseService.FindAll()
+	courses, err := servicemanager.CourseService.FindAll()
 
 	if courses == nil {
 		courses = []types.Course{}
@@ -36,56 +33,43 @@ func GetCourses(c echo.Context) error {
 	if err == nil {
 		return c.JSON(http.StatusOK, courses)
 	}
-	if err := c.JSON(http.StatusInternalServerError,
-		storage.ErrorReponse{ Message: "Failed to get courses" }); err != nil {
-		return err
-	}
+	_ = c.NoContent(http.StatusInternalServerError)
 	return err
 }
 
 func SetCourse(c echo.Context) error {
 	var course types.Course
-	errMsg := storage.ErrorReponse{ Message: "Failed to set course" }
 
 	err := c.Bind(&course)
 	if err != nil {
-		if err := c.JSON(http.StatusBadRequest, errMsg); err != nil {
-			return err
-		}
+		_ = c.NoContent(http.StatusBadRequest)
 		return err
 	}
 
-	err = servivemanager.CourseService.Create(course)
+	err = servicemanager.CourseService.Create(course)
 	if err == nil {
 		return c.JSON(http.StatusCreated, course)
 	}
 
-	if err := c.JSON(http.StatusInternalServerError, errMsg); err != nil {
-		return err
-	}
+	_ = c.NoContent(http.StatusInternalServerError)
 	return err
 }
 
 func PutCourse(c echo.Context) error {
 	var course types.Course
-	errMsg := storage.ErrorReponse{ Message: "Failed to put course" }
 
 	err := c.Bind(&course)
 	if err != nil {
-		if err := c.JSON(http.StatusBadRequest,errMsg); err != nil {
-			return  err
-		}
-		return err
+		_ = c.NoContent(http.StatusBadRequest)
+		return  err
 	}
 
-	err = servivemanager.CourseService.Update(course)
+	err = servicemanager.CourseService.Update(course)
 	if err == nil {
 		return c.JSON(http.StatusCreated, course)
 	}
 
-	if err := c.JSON(http.StatusInternalServerError, errMsg); err != nil {
-		return err
-	}
+	_ = c.NoContent(http.StatusInternalServerError)
 	return err
 	}
 
@@ -93,15 +77,13 @@ func DelCourse(c echo.Context) error {
 	name := c.Param("name")
 	httpStatus := http.StatusOK
 
-	err:= servivemanager.CourseService.Delete(types.Course{Name:name})
+	err:= servicemanager.CourseService.Delete(types.Course{Name: name})
 	if err != nil {
 		httpStatus = http.StatusInternalServerError
 	}
 	if err == storage.ErrNotFound {
 		httpStatus = http.StatusNotFound
 	}
-	if err := c.NoContent(httpStatus); err != nil {
-		return err
-	}
+	_ = c.NoContent(httpStatus)
 	return err
 }

@@ -7,14 +7,14 @@ import (
 
 	"github.com/ednesic/coursemanagement/handlers"
 	"github.com/ednesic/coursemanagement/services"
-	"github.com/ednesic/coursemanagement/servivemanager"
+	"github.com/ednesic/coursemanagement/servicemanager"
 )
 
 func main() {
 	var err error
 	e := echo.New()
 
-	servivemanager.CourseService, err = services.NewCourseService(os.Getenv("COURSE_DB_HOST"), os.Getenv("COURSE_DB"))
+	servicemanager.CourseService, err = services.NewCourseService(os.Getenv("COURSE_DB_HOST"), os.Getenv("COURSE_DB"))
 
 	if err != nil {
 		e.Logger.Fatal("Could not resolve course service", err)

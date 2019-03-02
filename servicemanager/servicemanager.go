@@ -1,4 +1,4 @@
-package servivemanager
+package servicemanager
 
 import "github.com/ednesic/coursemanagement/services"
 
