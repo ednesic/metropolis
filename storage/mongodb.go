@@ -1,4 +1,4 @@
-package mongodb
+package storage
 
 import (
 	"gopkg.in/mgo.v2"
