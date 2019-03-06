@@ -20,7 +20,7 @@ type CourseService interface {
 
 type CourseServiceImpl struct {
 	dal   storage.DataAccessLayer
-	cache *cache.Codec
+	cache redis.RedisClient
 }
 
 func NewCourseService(dbUri, dbName string, redisHosts map[string]string) (CourseService, error) {

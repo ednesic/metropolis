@@ -6,7 +6,7 @@ import (
 )
 
 type DataAccessLayer interface {
-	Insert(collectionName string, doc interface{}) error
+	Insert(collName string, doc interface{}) error
 	Find(collName string, query bson.M, doc interface{}) error
 	FindOne(collName string, query bson.M, doc interface{}) error
 	Count(collName string, query bson.M) (int, error)

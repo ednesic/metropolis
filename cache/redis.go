@@ -1,4 +1,4 @@
-package redis
+package cache
 
 import (
 "github.com/go-redis/cache"
@@ -7,9 +7,9 @@ import (
 )
 
 type RedisClient interface {
-	Get(key string, object interface{}) error
-	Set(item *cache.Item) error
-	Delete(key string) error
+	Get(string, interface{}) error
+	Set(*cache.Item) error
+	Delete(string) error
 }
 
 type Redis struct {

@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/ednesic/coursemanagement/metrics"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"os"
 
 	"github.com/ednesic/coursemanagement/handlers"
@@ -28,9 +30,12 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.BodyLimit("2M"))
+	e.Use(metrics.NewMetric())
 
 	//e.Server.ReadTimeout = time.Duration(1 * time.Second)
 	//e.Server.WriteTimeout= time.Duration(1 * time.Second)
+
+	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
 	e.GET("/courses/:name", handlers.GetCourse)
 	e.GET("/courses", handlers.GetCourses)
