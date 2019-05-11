@@ -24,7 +24,7 @@ type CourseServiceImpl struct {
 }
 
 func NewCourseService(dbUri, dbName string, redisHosts map[string]string) (CourseService, error) {
-	dal, err := storage.NewMongoDAL(dbUri, dbName)
+	dal, err := storage.NewMongoConnectDAL(dbUri, dbName)
 	return &CourseServiceImpl{
 		dal,
 		redis.NewRedisClient(redisHosts),
@@ -32,37 +32,49 @@ func NewCourseService(dbUri, dbName string, redisHosts map[string]string) (Cours
 }
 
 func (s *CourseServiceImpl) FindOne(name string) (c types.Course, err error) {
-	if cacheErr := s.cache.Get(coll+name, &c); cacheErr != nil {
-		err = s.dal.FindOne(coll, map[string]interface{}{"name": name}, &c)
-		cacheErr = s.cache.Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Hour})
+	var mgoErr error
+	if err := s.cache.Get(coll+name, &c); err != nil {
+		mgoErr = s.dal.FindOne(coll, map[string]interface{}{"name": name}, &c)
 	}
-	return
+	if mgoErr == nil {
+		return c, s.cache.Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Hour})
+	}
+	return c, mgoErr
 }
 
 func (s *CourseServiceImpl) Create(course types.Course) error {
 	err := s.dal.Insert(coll, course)
-	_ = s.cache.Set(&cache.Item{Key: coll + course.Name, Object: course, Expiration: time.Hour}) //resolve cache error
+	if err == nil {
+		return s.cache.Set(&cache.Item{Key: coll + course.Name, Object: course, Expiration: time.Hour})
+	}
 	return err
-
 }
 
 func (s *CourseServiceImpl) Update(course types.Course) error {
-	err := s.dal.Upsert(coll, map[string]interface{}{"name": course.Name}, &course)
-	_ = s.cache.Delete(coll + course.Name)
+	err := s.dal.Update(coll, map[string]interface{}{"name": course.Name}, &course)
+	if err == nil {
+		return s.cache.Delete(coll + course.Name)
+	}
 	return err
 }
 
 func (s *CourseServiceImpl) FindAll() (cs []types.Course, err error) {
+	var mgoErr error
 	suffixKey := "all"
+
 	if cacheErr := s.cache.Get(coll + suffixKey, &cs); cacheErr != nil {
-		err = s.dal.Find(coll, map[string]interface{}{}, &cs)
-		cacheErr = s.cache.Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Hour})
+		mgoErr = s.dal.Find(coll, map[string]interface{}{}, &cs)
 	}
-	return
+	if mgoErr == nil {
+		return cs, s.cache.Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Hour})
+	}
+	return cs, mgoErr
 }
 
 func (s *CourseServiceImpl) Delete(course types.Course) error {
 	err := s.dal.Remove(coll, map[string]interface{}{"name": course.Name})
-	_ = s.cache.Delete(coll + course.Name)
+	if err == nil {
+		return s.cache.Delete(coll + course.Name)
+	}
 	return err
 }

@@ -1,11 +1,11 @@
 package storage
 
 import (
-	"gopkg.in/mgo.v2"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var (
-	ErrNotFound = mgo.ErrNotFound
+	ErrNotFound = mongo.ErrNoDocuments
 )
 
 type ErrorReponse struct {

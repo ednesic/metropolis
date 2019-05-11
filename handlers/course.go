@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"github.com/ednesic/coursemanagement/cache"
+	internalMiddleware "github.com/ednesic/coursemanagement/middleware"
 	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
@@ -13,6 +15,10 @@ func GetCourse(c echo.Context) error {
 	course, err := servicemanager.CourseService.FindOne(name)
 	httpStatus := http.StatusOK
 
+	if serr, ok := err.(*cache.RedisErr); ok {
+		c.Set(internalMiddleware.RedisContext, serr)
+		err = nil
+	}
 	if err == nil {
 		return c.JSON(httpStatus, course)
 	}

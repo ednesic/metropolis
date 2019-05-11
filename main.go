@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/ednesic/coursemanagement/handlers"
+	internalMiddleware "github.com/ednesic/coursemanagement/middleware"
 	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/services"
 )
@@ -15,6 +16,7 @@ import (
 func main() {
 	var err error
 	e := echo.New()
+	//e.Logger.SetLevel(log.DEBUG) //add levels
 
 	servicemanager.CourseService, err = services.NewCourseService(
 		os.Getenv("COURSE_DB_HOST"),
@@ -26,11 +28,12 @@ func main() {
 		e.Logger.Fatal("Could not resolve course service", err)
 	}
 
-	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.BodyLimit("2M"))
 	e.Use(metrics.NewMetric())
+	e.Use(internalMiddleware.RedisWarn)
+	e.Use(middleware.Logger())
 
 	//e.Server.ReadTimeout = time.Duration(1 * time.Second)
 	//e.Server.WriteTimeout= time.Duration(1 * time.Second)
