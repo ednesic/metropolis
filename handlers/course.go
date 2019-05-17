@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/ednesic/coursemanagement/cache"
-	internalMiddleware "github.com/ednesic/coursemanagement/middleware"
 	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
@@ -16,7 +15,7 @@ func GetCourse(c echo.Context) error {
 	httpStatus := http.StatusOK
 
 	if serr, ok := err.(*cache.RedisErr); ok {
-		c.Set(internalMiddleware.RedisContext, serr)
+		c.Logger().Warn(serr)
 		err = nil
 	}
 	if err == nil {
@@ -33,6 +32,10 @@ func GetCourse(c echo.Context) error {
 func GetCourses(c echo.Context) error {
 	courses, err := servicemanager.CourseService.FindAll()
 
+	if serr, ok := err.(*cache.RedisErr); ok {
+		c.Logger().Warn(serr)
+		err = nil
+	}
 	if courses == nil {
 		courses = []types.Course{}
 	}
@@ -47,12 +50,17 @@ func SetCourse(c echo.Context) error {
 	var course types.Course
 
 	if err := c.Bind(&course); err != nil {
+		_ = c.NoContent(http.StatusBadRequest)
 		return err
 	}
 
 	err := servicemanager.CourseService.Create(course)
+	if serr, ok := err.(*cache.RedisErr); ok {
+		c.Logger().Warn(serr)
+		err = nil
+	}
 	if err == nil {
-		return c.JSON(http.StatusCreated, course)
+		return c.JSON(http.StatusOK, course)
 	}
 
 	_ = c.NoContent(http.StatusInternalServerError)
@@ -63,10 +71,15 @@ func PutCourse(c echo.Context) error {
 	var course types.Course
 
 	if err := c.Bind(&course); err != nil {
+		_ = c.NoContent(http.StatusBadRequest)
 		return err
 	}
 
 	err := servicemanager.CourseService.Update(course)
+	if serr, ok := err.(*cache.RedisErr); ok {
+		c.Logger().Warn(serr)
+		err = nil
+	}
 	if err == nil {
 		return c.JSON(http.StatusCreated, course)
 	}
@@ -79,7 +92,11 @@ func DelCourse(c echo.Context) error {
 	name := c.Param("name")
 	httpStatus := http.StatusOK
 
-	err:= servicemanager.CourseService.Delete(types.Course{Name: name})
+	err := servicemanager.CourseService.Delete(types.Course{Name: name})
+	if serr, ok := err.(*cache.RedisErr); ok {
+		c.Logger().Warn(serr)
+		err = nil
+	}
 	if err != nil {
 		httpStatus = http.StatusInternalServerError
 	}

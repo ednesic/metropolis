@@ -58,7 +58,8 @@ func (s *CourseServiceImpl) Update(course types.Course) error {
 	return err
 }
 
-func (s *CourseServiceImpl) FindAll() (cs []types.Course, err error) {
+func (s *CourseServiceImpl) FindAll() ([]types.Course, error) {
+	cs := []types.Course{}
 	var mgoErr error
 	suffixKey := "all"
 

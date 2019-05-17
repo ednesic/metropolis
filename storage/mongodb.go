@@ -1,8 +1,6 @@
 package storage
 //
-//import (
-//	"gopkg.in/mgo.v2"
-//)
+//import "gopkg.in/mgo.v2"
 //
 //type DataAccessLayer interface {
 //	Insert(collName string, doc interface{}) error
@@ -38,7 +36,7 @@ package storage
 //	return session.DB(m.dbName).C(collName).Insert(doc)
 //}
 //
-//// Find finds all documents in the collection
+// Find finds all documents in the collection
 //func (m *MongoDAL) Find(collName string, query map[string]interface{}, doc interface{}) error {
 //	session := m.session.Clone()
 //	defer session.Close()

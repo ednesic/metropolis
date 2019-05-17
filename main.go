@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/ednesic/coursemanagement/handlers"
-	internalMiddleware "github.com/ednesic/coursemanagement/middleware"
 	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/services"
 )
@@ -32,7 +31,6 @@ func main() {
 	e.Use(middleware.RequestID())
 	e.Use(middleware.BodyLimit("2M"))
 	e.Use(metrics.NewMetric())
-	e.Use(internalMiddleware.RedisWarn)
 	e.Use(middleware.Logger())
 
 	//e.Server.ReadTimeout = time.Duration(1 * time.Second)

@@ -3,9 +3,9 @@ package storage
 import (
 	"context"
 	"errors"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"reflect"
 	"time"
 )
 
@@ -53,20 +53,30 @@ func (m *MongoConnectDAL) Find(collName string, query map[string]interface{}, do
 	if err != nil {
 		return err
 	}
+
+	resultv := reflect.ValueOf(doc)
+	if resultv.Kind() != reflect.Ptr || resultv.Elem().Kind() != reflect.Slice {
+		return errors.New("failed to return array response")
+	}
+
+	slicev := resultv.Elem()
+	slicev = slicev.Slice(0, slicev.Cap())
+	elem := slicev.Type().Elem()
+
+	i := 0
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
-		var result bson.M
-		err := cur.Decode(&result)
-		switch sp := doc.(type) {
-		case *[]interface{}:
-			*sp = append(*sp, result)
-		default:
-			return errors.New("failed to return array response")
-		}
+		elemp := reflect.New(elem)
+		err := cur.Decode(elemp.Interface())
 		if err != nil {
 			return err
 		}
+		slicev = reflect.Append(slicev, elemp.Elem())
+		slicev = slicev.Slice(0, slicev.Cap())
+		i++
 	}
+
+	resultv.Elem().Set(slicev.Slice(0, i))
 	return nil
 }
 
@@ -80,7 +90,7 @@ func (m *MongoConnectDAL) FindOne(collName string, query map[string]interface{},
 func (m *MongoConnectDAL) Update(collName string, selector map[string]interface{}, update interface{}) error {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 
-	_, err := m.collection.UpdateOne(ctx, selector, update)
+	_, err := m.collection.UpdateOne(ctx, selector, map[string]interface{}{"$set": update})
 	return err
 }
 
