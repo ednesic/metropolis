@@ -19,6 +19,7 @@ func TestCourseFindOne_FindsCourseCached(t *testing.T) {
 		arg := args.Get(1).(*types.Course)
 		*arg = redisCourseMock
 	}).Once()
+	redisMock.On("Set", mock.Anything).Return(nil).Once()
 
 	courseService := CourseServiceImpl{
 		cache: redisMock,

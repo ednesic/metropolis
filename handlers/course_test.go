@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/services"
+	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -32,7 +33,7 @@ func TestGetCourse(t *testing.T) {
 		want   wants
 	}{
 		{"Status ok", fields{"nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewUrlVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status notFound", fields{"nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: mgo.ErrNotFound}},
+		{"Status notFound", fields{"nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
 		{"Status internal server error", fields{"nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
 	}
 	for _, tt := range tests {
@@ -153,7 +154,7 @@ func TestSetCourse(t *testing.T) {
 		mock  mocks
 		field fields
 	}{
-		{"Status ok", wants{statusCode:http.StatusCreated}, mocks{mongoMockTimes: 1, course:types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
+		{"Status ok", wants{statusCode:http.StatusOK}, mocks{mongoMockTimes: 1, course:types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
 		{"Status bad request", wants{statusCode:http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
 		{"Status internal server error", wants{statusCode:http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
 	}
@@ -285,7 +286,7 @@ func TestDelCourse(t *testing.T) {
 		want   wants
 	}{
 		{"Status ok", fields{"nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewUrlVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status notFound", fields{"nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: mgo.ErrNotFound}},
+		{"Status notFound", fields{"nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
 		{"Status internal server error", fields{"nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
 	}
 	for _, tt := range tests {
