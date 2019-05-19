@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"github.com/ednesic/coursemanagement/metrics"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/ednesic/coursemanagement/handlers"
 	"github.com/ednesic/coursemanagement/servicemanager"
@@ -24,7 +27,7 @@ func main() {
 		)
 
 	if err != nil {
-		e.Logger.Fatal("Could not resolve course service", err)
+		e.Logger.Fatal("Could not resolve course service: ", err)
 	}
 
 	e.Use(middleware.Recover())
@@ -44,5 +47,19 @@ func main() {
 	e.POST("/courses", handlers.SetCourse)
 	e.DELETE("/courses/:name", handlers.DelCourse)
 
-	e.Logger.Fatal(e.Start(":9090"))
+	go func() {
+		if err := e.Start(":9090"); err != nil {
+			e.Logger.Info("shutting down the server")
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+	servicemanager.CourseService.Shutdown()
 }

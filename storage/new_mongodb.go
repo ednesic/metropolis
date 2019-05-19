@@ -5,6 +5,7 @@ import (
 	"errors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"reflect"
 	"time"
 )
@@ -16,17 +17,23 @@ type DataAccessLayer interface {
 	Count(collName string, query map[string]interface{}) (int64, error)
 	Update(collName string, selector map[string]interface{}, update interface{}) error
 	Remove(collName string, selector map[string]interface{}) error
+	Disconnect()
 }
 
 
 type MongoConnectDAL struct {
 	collection *mongo.Collection
 	dbName  string
+	client *mongo.Client
 }
 
 func NewMongoConnectDAL(dbURI string, dbName string) (DataAccessLayer, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 10 * time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 2 * time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
+	if err != nil {
+		return nil, err
+	}
+	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
 		return nil, err
 	}
@@ -35,6 +42,7 @@ func NewMongoConnectDAL(dbURI string, dbName string) (DataAccessLayer, error) {
 	newMongo := &MongoConnectDAL{
 		collection: collection,
 		dbName:  dbName,
+		client: client,
 	}
 	return newMongo, err
 }
@@ -106,4 +114,9 @@ func (m *MongoConnectDAL) Remove(collName string, selector map[string]interface{
 func (m *MongoConnectDAL) Count(collName string, query map[string]interface{}) (int64, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	return m.collection.CountDocuments(ctx, query)
+}
+
+func (m *MongoConnectDAL) Disconnect() {
+	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
+	_ = m.client.Disconnect(ctx)
 }

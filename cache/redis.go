@@ -13,17 +13,18 @@ type RedisErr struct {
 
 func (e *RedisErr) Error() string {
 	return fmt.Sprintf("Redis err: %s", e.Msg)
-
 }
 
 type RedisClient interface {
 	Get(string, interface{}) error
 	Set(*cache.Item) error
 	Delete(string) error
+	Disconnect()
 }
 
 type Redis struct {
 	Codec *cache.Codec
+	ring *redis.Ring
 }
 
 func NewRedisClient(hosts map[string]string) RedisClient {
@@ -31,16 +32,19 @@ func NewRedisClient(hosts map[string]string) RedisClient {
 		Addrs: hosts,
 	})
 
-	return &Redis{&cache.Codec{
-		Redis: ring,
+	return &Redis{
+		ring: ring,
+		Codec:&cache.Codec{
+			Redis: ring,
 
-		Marshal: func(v interface{}) ([]byte, error) {
-			return msgpack.Marshal(v)
+			Marshal: func(v interface{}) ([]byte, error) {
+				return msgpack.Marshal(v)
+			},
+			Unmarshal: func(b []byte, v interface{}) error {
+				return msgpack.Unmarshal(b, v)
+			},
 		},
-		Unmarshal: func(b []byte, v interface{}) error {
-			return msgpack.Unmarshal(b, v)
-		},
-	}}
+	}
 }
 
 func (rc *Redis) Get(key string, object interface{}) error {
@@ -62,4 +66,8 @@ func (rc *Redis) Delete(key string) error {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
+}
+
+func (rc * Redis) Disconnect() {
+	_ = rc.ring.Close()
 }

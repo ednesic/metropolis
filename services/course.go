@@ -16,6 +16,7 @@ type CourseService interface {
 	FindAll() ([]types.Course, error)
 	Delete(types.Course) error
 	FindOne(string) (types.Course, error)
+	Shutdown()
 }
 
 type CourseServiceImpl struct {
@@ -76,4 +77,9 @@ func (s *CourseServiceImpl) Delete(course types.Course) error {
 		return s.cache.Delete(coll + course.Name)
 	}
 	return err
+}
+
+func (s *CourseServiceImpl) Shutdown() {
+	s.dal.Disconnect()
+	s.cache.Disconnect()
 }
