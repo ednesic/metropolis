@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b8e1de6f-2cc2-4af2-9324-298e89c7c195" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cache/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/cache/redis.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/redis_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/cache/redis_mock.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/course.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/new_mongodb.go" beforeDir="false" afterPath="$PROJECT_DIR$/storage/new_mongodb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/course_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/course_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/mongodb_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/storage/mongodb_mock.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,7 +18,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/storage/new_mongodb.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="168">
@@ -28,10 +28,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/storage/mongodb_mock.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="284">
+              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+              <folding>
+                <element signature="e#17#63#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cache/redis_mock.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="23" column="24" lean-forward="true" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+              <folding>
+                <element signature="e#15#90#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
-              <caret line="22" column="54" lean-forward="true" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
+            <state relative-caret-position="-333">
+              <caret line="19" column="17" lean-forward="true" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
               <folding>
                 <element signature="e#14#360#0" expanded="true" />
               </folding>
@@ -42,8 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/services/course.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="27" column="29" lean-forward="true" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
+            <state relative-caret-position="153">
+              <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
               <folding>
                 <element signature="e#18#208#0" expanded="true" />
               </folding>
@@ -52,10 +76,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/course_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="872">
+              <caret line="250" lean-forward="true" selection-start-line="250" selection-end-line="250" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cache/redis.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1005">
-              <caret line="72" column="1" lean-forward="true" selection-start-line="72" selection-start-column="1" selection-end-line="72" selection-end-column="1" />
+            <state relative-caret-position="240">
+              <caret line="21" column="14" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/handlers/course_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="323" column="34" selection-start-line="323" selection-start-column="34" selection-end-line="323" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/course_mock.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="338">
+              <caret line="34" column="1" lean-forward="true" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -144,7 +195,6 @@
         <option value="$PROJECT_DIR$/metrics/prometheus.go" />
         <option value="$PROJECT_DIR$/metrics/prometheus_test.go" />
         <option value="$PROJECT_DIR$/storage/mongodo_mock.go" />
-        <option value="$PROJECT_DIR$/cache/redis_mock.go" />
         <option value="$PROJECT_DIR$/cache/error.go" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/go.mod" />
@@ -153,13 +203,15 @@
         <option value="$PROJECT_DIR$/handlers/course.go" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/storage/mongodb.go" />
-        <option value="$PROJECT_DIR$/storage/mongodb_mock.go" />
         <option value="$PROJECT_DIR$/services/course_test.go" />
         <option value="$PROJECT_DIR$/handlers/course_test.go" />
-        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/services/course.go" />
         <option value="$PROJECT_DIR$/cache/redis.go" />
         <option value="$PROJECT_DIR$/storage/new_mongodb.go" />
+        <option value="$PROJECT_DIR$/storage/mongodb_mock.go" />
+        <option value="$PROJECT_DIR$/main.go" />
+        <option value="$PROJECT_DIR$/cache/redis_mock.go" />
+        <option value="$PROJECT_DIR$/services/course_mock.go" />
       </list>
     </option>
   </component>
@@ -264,7 +316,16 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.go test github.com/ednesic/coursemanagement/handlers">
+  <component name="RunManager" selected="Go Test.course_test.go (1)">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="coursemanagement" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/main.go" />
+      <package value="github.com/ednesic/coursemanagement" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestDelCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
@@ -276,37 +337,24 @@
       <pattern value="^TestDelCourse$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestGetCourses in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="course_test.go (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
       <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/ednesic/coursemanagement/handlers" />
+      <kind value="FILE" />
+      <package value="github.com/ednesic/coursemanagement" />
       <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestGetCourses$" />
+      <filePath value="$PROJECT_DIR$/handlers/course_test.go" />
       <method v="2" />
     </configuration>
-    <configuration name="TestPutCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="course_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
-      <working_directory value="$PROJECT_DIR$/handlers" />
+      <working_directory value="$PROJECT_DIR$/services" />
       <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/ednesic/coursemanagement/handlers" />
+      <kind value="FILE" />
+      <package value="github.com/ednesic/coursemanagement" />
       <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestPutCourse$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestSetCourse in github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="coursemanagement" />
-      <working_directory value="$PROJECT_DIR$/handlers" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/ednesic/coursemanagement/handlers" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestSetCourse$" />
+      <filePath value="$PROJECT_DIR$/services/course_test.go" />
       <method v="2" />
     </configuration>
     <configuration name="go test github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -320,32 +368,23 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Test.TestGetCourses in github.com/ednesic/coursemanagement/handlers" />
-      <item itemvalue="Go Test.TestSetCourse in github.com/ednesic/coursemanagement/handlers" />
-      <item itemvalue="Go Test.TestPutCourse in github.com/ednesic/coursemanagement/handlers" />
       <item itemvalue="Go Test.TestDelCourse in github.com/ednesic/coursemanagement/handlers" />
       <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/handlers" />
+      <item itemvalue="Go Build.go build main.go" />
+      <item itemvalue="Go Test.course_test.go" />
+      <item itemvalue="Go Test.course_test.go (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.course_test.go (1)" />
+        <item itemvalue="Go Test.course_test.go" />
+        <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/handlers" />
         <item itemvalue="Go Test.TestDelCourse in github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Test.TestPutCourse in github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Test.TestSetCourse in github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Test.TestGetCourses in github.com/ednesic/coursemanagement/handlers" />
       </list>
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="course_test_go - 2019.05.19 at 12h 28m 45s.xml">
-      <configuration name="course_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="course_test_go - 2019.05.19 at 12h 29m 33s.xml">
-      <configuration name="course_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="course_test_go_(1) - 2019.05.19 at 12h 30m 52s.xml">
-      <configuration name="course_test.go (1)" configurationId="GoTestRunConfiguration" />
-    </history-entry>
     <history-entry file="TestGetCourse_in_github_com_ednesic_coursemanagement_handlers - 2019.05.19 at 13h 04m 59s.xml">
       <configuration name="TestGetCourse in github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
@@ -367,17 +406,26 @@
     <history-entry file="go_test_github_com_ednesic_coursemanagement_handlers - 2019.05.19 at 13h 18m 11s.xml">
       <configuration name="go test github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
     </history-entry>
+    <history-entry file="go_test_github_com_ednesic_coursemanagement_handlers - 2019.05.19 at 14h 41m 10s.xml">
+      <configuration name="go test github.com/ednesic/coursemanagement/handlers" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="course_test_go - 2019.05.19 at 14h 44m 13s.xml">
+      <configuration name="course_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="course_test_go_(1) - 2019.05.19 at 14h 44m 23s.xml">
+      <configuration name="course_test.go (1)" configurationId="GoTestRunConfiguration" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27896994" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27896994" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32970297" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3927711" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3927711" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3313253" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -385,7 +433,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32891566" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.38915664" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.38915664" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Performance Profiler" order="12" weight="0.739759" />
       <window_info anchor="bottom" id="Messages" order="13" />
@@ -444,13 +492,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../pkg/mod/go.mongodb.org/mongo-driver@v1.0.0/x/network/command/create_indexes.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../pkg/mod/go.mongodb.org/mongo-driver@v1.0.0/mongo/index_view.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
@@ -635,16 +676,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/storage/mongodb.go" />
-    <entry file="file://$PROJECT_DIR$/storage/mongodb_mock.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="27" column="44" selection-start-line="27" selection-start-column="44" selection-end-line="27" selection-end-column="44" />
-          <folding>
-            <element signature="e#17#63#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/go.mod">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -689,13 +720,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/course_mock.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/handlers/course.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-709">
@@ -703,31 +727,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handlers/course_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4305">
-          <caret line="304" lean-forward="true" selection-start-line="304" selection-end-line="304" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/servicemanager/servicemanager.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cache/redis_mock.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="31" lean-forward="true" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/services/course_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="311" column="25" lean-forward="true" selection-start-line="311" selection-start-column="25" selection-end-line="311" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -752,13 +755,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cache/redis.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="72" column="1" lean-forward="true" selection-start-line="72" selection-start-column="1" selection-end-line="72" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../pkg/mod/go.mongodb.org/mongo-driver@v1.0.0/mongo/client.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -766,23 +762,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
+    <entry file="file://$PROJECT_DIR$/services/course.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="22" column="54" lean-forward="true" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
+        <state relative-caret-position="153">
+          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
           <folding>
-            <element signature="e#14#360#0" expanded="true" />
+            <element signature="e#18#208#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/course.go">
+    <entry file="file://$PROJECT_DIR$/handlers/course_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="27" column="29" lean-forward="true" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
+        <state relative-caret-position="238">
+          <caret line="323" column="34" selection-start-line="323" selection-start-column="34" selection-end-line="323" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/go/1.12.4/libexec/src/runtime/proc.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-67">
+          <caret line="301" selection-start-line="301" selection-end-line="301" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/course_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="872">
+          <caret line="250" lean-forward="true" selection-start-line="250" selection-end-line="250" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cache/redis.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="21" column="14" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cache/redis_mock.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="24" lean-forward="true" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
           <folding>
-            <element signature="e#18#208#0" expanded="true" />
+            <element signature="e#15#90#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/course_mock.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="34" column="1" lean-forward="true" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -790,6 +821,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
           <caret line="30" column="57" selection-start-line="30" selection-start-column="57" selection-end-line="30" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/mongodb_mock.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <element signature="e#17#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-333">
+          <caret line="19" column="17" lean-forward="true" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+          <folding>
+            <element signature="e#14#360#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

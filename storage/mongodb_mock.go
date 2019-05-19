@@ -37,3 +37,6 @@ func (m *DataAccessLayerMock) Remove(collName string, selector map[string]interf
 	args := m.Called(collName, selector)
 	return args.Error(0)
 }
+
+func (m *DataAccessLayerMock) Disconnect() {
+}

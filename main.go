@@ -5,6 +5,7 @@ import (
 	"github.com/ednesic/coursemanagement/metrics"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"os"
 	"os/signal"
@@ -18,7 +19,11 @@ import (
 func main() {
 	var err error
 	e := echo.New()
-	//e.Logger.SetLevel(log.DEBUG) //add levels
+	e.Logger.SetLevel(log.DEBUG)
+
+	if os.Getenv("ENV") == "prod" {
+		e.Logger.SetLevel(log.INFO)
+	}
 
 	servicemanager.CourseService, err = services.NewCourseService(
 		os.Getenv("COURSE_DB_HOST"),

@@ -23,3 +23,5 @@ func (rc *RedisMock) Delete(key string) error {
 	args := rc.Called(key)
 	return args.Error(0)
 }
+
+func (rc *RedisMock) Disconnect() {}
