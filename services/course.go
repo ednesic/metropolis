@@ -34,10 +34,9 @@ func NewCourseService(dbUri, dbName string, redisHosts map[string]string) (Cours
 func (s *CourseServiceImpl) FindOne(name string) (c types.Course, err error) {
 	var mgoErr error
 	if err := s.cache.Get(coll+name, &c); err != nil {
-		mgoErr = s.dal.FindOne(coll, map[string]interface{}{"name": name}, &c)
-	}
-	if mgoErr == nil {
-		return c, s.cache.Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Hour})
+		if mgoErr = s.dal.FindOne(coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
+			return c, s.cache.Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Hour})
+		}
 	}
 	return c, mgoErr
 }
@@ -64,10 +63,9 @@ func (s *CourseServiceImpl) FindAll() ([]types.Course, error) {
 	suffixKey := "all"
 
 	if cacheErr := s.cache.Get(coll + suffixKey, &cs); cacheErr != nil {
-		mgoErr = s.dal.Find(coll, map[string]interface{}{}, &cs)
-	}
-	if mgoErr == nil {
-		return cs, s.cache.Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Hour})
+		if mgoErr = s.dal.Find(coll, map[string]interface{}{}, &cs); mgoErr == nil {
+			return cs, s.cache.Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Hour})
+		}
 	}
 	return cs, mgoErr
 }
