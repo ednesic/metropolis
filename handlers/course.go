@@ -92,7 +92,7 @@ func DelCourse(c echo.Context) error {
 	name := c.Param("name")
 	httpStatus := http.StatusOK
 
-	err := servicemanager.CourseService.Delete(types.Course{Name: name})
+	err := servicemanager.CourseService.Delete(name)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil

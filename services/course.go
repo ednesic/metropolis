@@ -14,7 +14,7 @@ type CourseService interface {
 	Create(types.Course) error
 	Update(types.Course) error
 	FindAll() ([]types.Course, error)
-	Delete(types.Course) error
+	Delete(string) error
 	FindOne(string) (types.Course, error)
 	Shutdown()
 }
@@ -71,10 +71,10 @@ func (s *CourseServiceImpl) FindAll() ([]types.Course, error) {
 	return cs, mgoErr
 }
 
-func (s *CourseServiceImpl) Delete(course types.Course) error {
-	err := s.dal.Remove(coll, map[string]interface{}{"name": course.Name})
+func (s *CourseServiceImpl) Delete(name string) error {
+	err := s.dal.Remove(coll, map[string]interface{}{"name": name})
 	if err == nil {
-		return s.cache.Delete(coll + course.Name)
+		return s.cache.Delete(coll + name)
 	}
 	return err
 }

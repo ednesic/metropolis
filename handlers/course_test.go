@@ -300,7 +300,7 @@ func TestDelCourse(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var courseServiceMngr = &services.CourseServiceMock{}
-			courseServiceMngr.On("Delete", types.Course{Name: tt.fields.name}).Return(tt.fields.err).Once()
+			courseServiceMngr.On("Delete", tt.fields.name).Return(tt.fields.err).Once()
 			servicemanager.CourseService = courseServiceMngr
 
 			e := echo.New()

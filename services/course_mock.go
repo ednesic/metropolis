@@ -29,8 +29,8 @@ func (s *CourseServiceMock) FindAll() (cs []types.Course, err error) {
 	return args.Get(0).([]types.Course), args.Error(1)
 }
 
-func (s *CourseServiceMock) Delete(course types.Course) error {
-	args := s.Called(course)
+func (s *CourseServiceMock) Delete(name string) error {
+	args := s.Called(name)
 	return args.Error(0)
 }
 

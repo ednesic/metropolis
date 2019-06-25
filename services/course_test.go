@@ -267,7 +267,7 @@ func TestCourseDelete_ErrDelete(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	errMock := errors.New("err delete")
 	mongoMock.On("Remove", coll, mock.Anything).Return(errMock).Once()
-	testCourse := types.Course{Name: "test02"}
+	testCourse := "test02"
 
 	courseService := CourseServiceImpl{
 		dal:   mongoMock,
@@ -283,9 +283,9 @@ func TestCourseDelete_ErrCache(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	redisMock := &redis.RedisMock{}
 	errMock := errors.New("err delete")
-	testCourse := types.Course{Name: "test02"}
+	testCourse := "test02"
 
-	redisMock.On("Delete", coll + testCourse.Name).Return(errMock).Once()
+	redisMock.On("Delete", coll + testCourse).Return(errMock).Once()
 	mongoMock.On("Remove", coll, mock.Anything).Return(nil).Once()
 
 	courseService := CourseServiceImpl{
@@ -303,9 +303,9 @@ func TestCourseDelete_ErrCache(t *testing.T) {
 func TestCourseDelete_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	redisMock := &redis.RedisMock{}
-	testCourse := types.Course{Name: "test02"}
+	testCourse := "test02"
 
-	redisMock.On("Delete", coll + testCourse.Name).Return(nil).Once()
+	redisMock.On("Delete", coll + testCourse).Return(nil).Once()
 	mongoMock.On("Remove", coll, mock.Anything).Return(nil).Once()
 
 	courseService := CourseServiceImpl{
