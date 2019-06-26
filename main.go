@@ -2,7 +2,12 @@ package main
 
 import (
 	"context"
+	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/metrics"
+	"github.com/ednesic/coursemanagement/repositorymanager"
+	"github.com/ednesic/coursemanagement/servicemanager"
+	"github.com/ednesic/coursemanagement/services"
+	"github.com/ednesic/coursemanagement/storage"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -12,8 +17,6 @@ import (
 	"time"
 
 	"github.com/ednesic/coursemanagement/handlers"
-	"github.com/ednesic/coursemanagement/servicemanager"
-	"github.com/ednesic/coursemanagement/services"
 )
 
 func main() {
@@ -25,14 +28,14 @@ func main() {
 		e.Logger.SetLevel(log.INFO)
 	}
 
-	servicemanager.CourseService, err = services.NewCourseService(
+	servicemanager.CourseService = services.NewCourseService()
+	repositorymanager.Redis = cache.NewRedisClient(map[string]string{ "server1": os.Getenv("COURSE_REDIS_HOST")})
+	repositorymanager.Dal, err = storage.NewMongoConnectDAL(
 		os.Getenv("COURSE_DB_HOST"),
-		os.Getenv("COURSE_DB"),
-		map[string]string{ "server1": os.Getenv("COURSE_REDIS_HOST")},
-		)
+		os.Getenv("COURSE_DB"))
 
 	if err != nil {
-		e.Logger.Fatal("Could not resolve course service: ", err)
+		e.Logger.Fatal("Could not resolve Data access layer: ", err)
 	}
 
 	e.Use(middleware.Recover())
@@ -40,9 +43,6 @@ func main() {
 	e.Use(middleware.BodyLimit("2M"))
 	e.Use(metrics.NewMetric())
 	e.Use(middleware.Logger())
-
-	//e.Server.ReadTimeout = time.Duration(1 * time.Second)
-	//e.Server.WriteTimeout= time.Duration(1 * time.Second)
 
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
@@ -66,5 +66,6 @@ func main() {
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
 	}
-	servicemanager.CourseService.Shutdown()
+	repositorymanager.Dal.Disconnect()
+	repositorymanager.Redis.Disconnect()
 }

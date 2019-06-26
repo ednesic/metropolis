@@ -33,5 +33,3 @@ func (s *CourseServiceMock) Delete(name string) error {
 	args := s.Called(name)
 	return args.Error(0)
 }
-
-func (s *CourseServiceMock) Shutdown() {}

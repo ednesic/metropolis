@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b8e1de6f-2cc2-4af2-9324-298e89c7c195" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/repositorymanager/repositorymanager.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/course.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/course_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/course_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/course.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/course_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/course_mock.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/course_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/course_test.go" afterDir="false" />
@@ -25,54 +25,6 @@
         <option value="Go File" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>Write</find>
-      <find>metric</find>
-      <find>course-management</find>
-      <find>M</find>
-      <find>*M</find>
-      <find>doc interface{}</find>
-      <find>selector,</find>
-      <find>r.</find>
-      <find>SkipClean</find>
-      <find>http.Han</find>
-      <find>MiddlewareFunc</find>
-      <find>HandlerFunc</find>
-      <find>`</find>
-      <find>CourseServiceImpl</find>
-      <find>HTTPErrorHandler</find>
-      <find>Repeatability</find>
-      <find>optional</find>
-      <find>_</find>
-      <find>Logger</find>
-      <find>err</find>
-      <find>MongoDAL</find>
-      <find>NewMongoDAL</find>
-      <find>bson.M</find>
-      <find>FIndOn</find>
-      <find>find</find>
-      <find>.course</find>
-      <find>All(</find>
-      <find>elemt</find>
-      <find>notfo</find>
-      <find>Close</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>CourseStorageImpl</replace>
-      <replace>types.Course</replace>
-      <replace>coursemanagement</replace>
-      <replace>doc bson.M</replace>
-      <replace>query bson.M</replace>
-      <replace>query bson.M,</replace>
-      <replace>selector bson.M,</replace>
-      <replace>n.</replace>
-      <replace>CourseServiceMock</replace>
-      <replace>NewMongoDAL</replace>
-      <replace>NewMongoConnectDAL</replace>
-      <replace>map[string]interface{}</replace>
-    </replaceStrings>
   </component>
   <component name="GOROOT" path="/usr/local/Cellar/go/1.12.6/libexec" />
   <component name="Git.Settings">
@@ -125,10 +77,15 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers">
+  <component name="RunManager" selected="Go Build.go build main.go">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$" />
+      <envs>
+        <env name="COURSE_DB_HOST" value="localhost" />
+        <env name="COURSE_DB" value="courses" />
+        <env name="COURSE_REDIS_HOST" value="localhost:6379" />
+      </envs>
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/main.go" />
       <package value="github.com/ednesic/coursemanagement" />
@@ -185,10 +142,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Test.BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" />
         <item itemvalue="Go Test.course_test.go (1)" />
         <item itemvalue="Go Test.course_test.go" />
-        <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/handlers" />
       </list>
     </recent_temporary>
@@ -201,7 +158,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

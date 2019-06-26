@@ -1,8 +1,7 @@
 package services
 
 import (
-	redis "github.com/ednesic/coursemanagement/cache"
-	"github.com/ednesic/coursemanagement/storage"
+	"github.com/ednesic/coursemanagement/repositorymanager"
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/go-redis/cache"
 	"time"
@@ -16,44 +15,36 @@ type CourseService interface {
 	FindAll() ([]types.Course, error)
 	Delete(string) error
 	FindOne(string) (types.Course, error)
-	Shutdown()
 }
 
-type CourseServiceImpl struct {
-	dal   storage.DataAccessLayer
-	cache redis.RedisClient
-}
+type CourseServiceImpl struct {}
 
-func NewCourseService(dbUri, dbName string, redisHosts map[string]string) (CourseService, error) {
-	dal, err := storage.NewMongoConnectDAL(dbUri, dbName)
-	return &CourseServiceImpl{
-		dal,
-		redis.NewRedisClient(redisHosts),
-	}, err
+func NewCourseService() CourseService {
+	return &CourseServiceImpl{}
 }
 
 func (s *CourseServiceImpl) FindOne(name string) (c types.Course, err error) {
 	var mgoErr error
-	if err := s.cache.Get(coll+name, &c); err != nil {
-		if mgoErr = s.dal.FindOne(coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
-			return c, s.cache.Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Hour})
+	if err := repositorymanager.Redis.Get(coll+name, &c); err != nil {
+		if mgoErr = repositorymanager.Dal.FindOne(coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
+			return c, repositorymanager.Redis.Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Hour})
 		}
 	}
 	return c, mgoErr
 }
 
 func (s *CourseServiceImpl) Create(course types.Course) error {
-	err := s.dal.Insert(coll, course)
+	err := repositorymanager.Dal.Insert(coll, course)
 	if err == nil {
-		return s.cache.Set(&cache.Item{Key: coll + course.Name, Object: course, Expiration: time.Hour})
+		return repositorymanager.Redis.Set(&cache.Item{Key: coll + course.Name, Object: course, Expiration: time.Hour})
 	}
 	return err
 }
 
 func (s *CourseServiceImpl) Update(course types.Course) error {
-	err := s.dal.Update(coll, map[string]interface{}{"name": course.Name}, &course)
+	err := repositorymanager.Dal.Update(coll, map[string]interface{}{"name": course.Name}, &course)
 	if err == nil {
-		return s.cache.Delete(coll + course.Name)
+		return repositorymanager.Redis.Delete(coll + course.Name)
 	}
 	return err
 }
@@ -63,23 +54,18 @@ func (s *CourseServiceImpl) FindAll() ([]types.Course, error) {
 	var mgoErr error
 	suffixKey := "all"
 
-	if cacheErr := s.cache.Get(coll + suffixKey, &cs); cacheErr != nil {
-		if mgoErr = s.dal.Find(coll, map[string]interface{}{}, &cs); mgoErr == nil {
-			return cs, s.cache.Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Hour})
+	if cacheErr := repositorymanager.Redis.Get(coll + suffixKey, &cs); cacheErr != nil {
+		if mgoErr = repositorymanager.Dal.Find(coll, map[string]interface{}{}, &cs); mgoErr == nil {
+			return cs, repositorymanager.Redis.Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Hour})
 		}
 	}
 	return cs, mgoErr
 }
 
 func (s *CourseServiceImpl) Delete(name string) error {
-	err := s.dal.Remove(coll, map[string]interface{}{"name": name})
+	err := repositorymanager.Dal.Remove(coll, map[string]interface{}{"name": name})
 	if err == nil {
-		return s.cache.Delete(coll + name)
+		return repositorymanager.Redis.Delete(coll + name)
 	}
 	return err
-}
-
-func (s *CourseServiceImpl) Shutdown() {
-	s.dal.Disconnect()
-	s.cache.Disconnect()
 }
