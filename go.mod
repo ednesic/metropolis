@@ -7,8 +7,8 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/labstack/echo/v4 v4.1.5
-	github.com/labstack/gommon v0.2.8
+	github.com/labstack/echo/v4 v4.1.6
+	github.com/labstack/gommon v0.2.9
 	github.com/onsi/ginkgo v1.7.0 // indirect
 	github.com/onsi/gomega v1.4.3 // indirect
 	github.com/prometheus/client_golang v0.9.2
