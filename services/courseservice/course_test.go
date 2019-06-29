@@ -1,4 +1,4 @@
-package services
+package courseservice
 
 import (
 	"errors"
@@ -24,7 +24,7 @@ func TestCourseFindOne_FindsCourseCached(t *testing.T) {
 
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	c, err := courseService.FindOne(testName)
 	assert.Nil(t, err)
@@ -49,7 +49,7 @@ func TestCourseFindOne_DoNotFindCourseCached(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	c, err := courseService.FindOne(testName)
 	assert.Nil(t, err)
@@ -68,7 +68,7 @@ func TestCourseCreate_ErrOnInsert(t *testing.T) {
 
 	repositorymanager.Dal = mongoMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Create(testCourse)
 	assert.Equal(t, err, errMock)
@@ -87,7 +87,7 @@ func TestCourseCreate_ErrOnCache(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Create(testCourse)
 	assert.Equal(t, err, errMock)
@@ -106,7 +106,7 @@ func TestCourseCreate_Success(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Create(testCourse)
 	assert.Nil(t, err)
@@ -123,7 +123,7 @@ func TestCourseUpdate_ErrUpdate(t *testing.T) {
 
 	repositorymanager.Dal = mongoMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Update(testCourse)
 	assert.Equal(t, err, errMock)
@@ -142,7 +142,7 @@ func TestCourseUpdate_ErrCache(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Update(testCourse)
 	assert.Equal(t, err, errMock)
@@ -161,7 +161,7 @@ func TestCourseUpdate_Success(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Update(testCourse)
 	assert.Nil(t, err)
@@ -181,7 +181,7 @@ func TestCourseFindAll_SuccessGetCache(t *testing.T) {
 
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	c, err := courseService.FindAll()
 	assert.Nil(t, err)
@@ -202,7 +202,7 @@ func TestCourseFindAll_ErrGet(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	c, err := courseService.FindAll()
 	assert.Equal(t, err, errMock)
@@ -225,7 +225,7 @@ func TestCourseFindAll_ErrSetCache(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	c, err := courseService.FindAll()
 	assert.Equal(t, err, errMock)
@@ -251,7 +251,7 @@ func TestCourseFindAll_Success(t *testing.T) {
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	c, err := courseService.FindAll()
 	assert.Nil(t, err)
@@ -269,7 +269,7 @@ func TestCourseDelete_ErrDelete(t *testing.T) {
 
 	repositorymanager.Dal = mongoMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Delete(testCourse)
 	assert.Equal(t, err, errMock)
@@ -283,13 +283,13 @@ func TestCourseDelete_ErrCache(t *testing.T) {
 	errMock := errors.New("err delete")
 	testCourse := "test02"
 
-	redisMock.On("Delete", coll + testCourse).Return(errMock).Once()
+	redisMock.On("Delete", coll+ testCourse).Return(errMock).Once()
 	mongoMock.On("Remove", coll, mock.Anything).Return(nil).Once()
 
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Delete(testCourse)
 	assert.Equal(t, err, errMock)
@@ -303,13 +303,13 @@ func TestCourseDelete_Success(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	testCourse := "test02"
 
-	redisMock.On("Delete", coll + testCourse).Return(nil).Once()
+	redisMock.On("Delete", coll+ testCourse).Return(nil).Once()
 	mongoMock.On("Remove", coll, mock.Anything).Return(nil).Once()
 
 	repositorymanager.Dal = mongoMock
 	repositorymanager.Redis = redisMock
 
-	courseService := CourseServiceImpl{}
+	courseService := Impl{}
 
 	err := courseService.Delete(testCourse)
 	assert.Nil(t, err)

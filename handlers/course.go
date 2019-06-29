@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/ednesic/coursemanagement/cache"
-	"github.com/ednesic/coursemanagement/servicemanager"
+	"github.com/ednesic/coursemanagement/services/courseservice"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/labstack/echo/v4"
@@ -11,7 +11,7 @@ import (
 
 func GetCourse(c echo.Context) error {
 	name := c.Param("name")
-	course, err := servicemanager.CourseService.FindOne(name)
+	cr, err := courseservice.GetInstance().FindOne(name)
 	httpStatus := http.StatusOK
 
 	if serr, ok := err.(*cache.RedisErr); ok {
@@ -19,7 +19,7 @@ func GetCourse(c echo.Context) error {
 		err = nil
 	}
 	if err == nil {
-		return c.JSON(httpStatus, course)
+		return c.JSON(httpStatus, cr)
 	}
 	httpStatus = http.StatusInternalServerError
 	if err == storage.ErrNotFound {
@@ -30,37 +30,37 @@ func GetCourse(c echo.Context) error {
 }
 
 func GetCourses(c echo.Context) error {
-	courses, err := servicemanager.CourseService.FindAll()
+	cs, err := courseservice.GetInstance().FindAll()
 
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil
 	}
-	if courses == nil {
-		courses = []types.Course{}
+	if cs == nil {
+		cs = []types.Course{}
 	}
 	if err == nil {
-		return c.JSON(http.StatusOK, courses)
+		return c.JSON(http.StatusOK, cs)
 	}
 	_ = c.NoContent(http.StatusInternalServerError)
 	return err
 }
 
 func SetCourse(c echo.Context) error {
-	var course types.Course
+	var cr types.Course
 
-	if err := c.Bind(&course); err != nil {
+	if err := c.Bind(&cr); err != nil {
 		_ = c.NoContent(http.StatusBadRequest)
 		return err
 	}
 
-	err := servicemanager.CourseService.Create(course)
+	err := courseservice.GetInstance().Create(cr)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil
 	}
 	if err == nil {
-		return c.JSON(http.StatusOK, course)
+		return c.JSON(http.StatusOK, cr)
 	}
 
 	_ = c.NoContent(http.StatusInternalServerError)
@@ -68,20 +68,20 @@ func SetCourse(c echo.Context) error {
 }
 
 func PutCourse(c echo.Context) error {
-	var course types.Course
+	var cr types.Course
 
-	if err := c.Bind(&course); err != nil {
+	if err := c.Bind(&cr); err != nil {
 		_ = c.NoContent(http.StatusBadRequest)
 		return err
 	}
 
-	err := servicemanager.CourseService.Update(course)
+	err := courseservice.GetInstance().Update(cr)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil
 	}
 	if err == nil {
-		return c.JSON(http.StatusCreated, course)
+		return c.JSON(http.StatusCreated, cr)
 	}
 
 	_ = c.NoContent(http.StatusInternalServerError)
@@ -92,7 +92,7 @@ func DelCourse(c echo.Context) error {
 	name := c.Param("name")
 	httpStatus := http.StatusOK
 
-	err := servicemanager.CourseService.Delete(name)
+	err := courseservice.GetInstance().Delete(name)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil

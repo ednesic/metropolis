@@ -1,24 +1,20 @@
 package cache
 
 import (
-	"fmt"
 	"github.com/go-redis/cache"
 	"github.com/go-redis/redis"
 	"github.com/vmihailenco/msgpack"
+	"sync"
 )
 
-type RedisErr struct {
-	Msg string
-}
-
-func (e *RedisErr) Error() string {
-	return fmt.Sprintf("Redis err: %s", e.Msg)
-}
+var instance *Redis
+var once sync.Once
 
 type RedisClient interface {
 	Get(string, interface{}) error
 	Set(*cache.Item) error
 	Delete(string) error
+	Initialize(map[string]string)
 	Disconnect()
 }
 
@@ -27,22 +23,25 @@ type Redis struct {
 	ring *redis.Ring
 }
 
-func NewRedisClient(hosts map[string]string) RedisClient {
-	ring := redis.NewRing(&redis.RingOptions{
+func GetInstance() RedisClient {
+	once.Do(func() {
+		instance = &Redis{}
+	})
+	return instance
+}
+
+func (rc *Redis) Initialize(hosts map[string]string) {
+	instance.ring = redis.NewRing(&redis.RingOptions{
 		Addrs: hosts,
 	})
+	instance.Codec = &cache.Codec{
+		Redis: instance.ring,
 
-	return &Redis{
-		ring: ring,
-		Codec:&cache.Codec{
-			Redis: ring,
-
-			Marshal: func(v interface{}) ([]byte, error) {
-				return msgpack.Marshal(v)
-			},
-			Unmarshal: func(b []byte, v interface{}) error {
-				return msgpack.Unmarshal(b, v)
-			},
+		Marshal: func(v interface{}) ([]byte, error) {
+			return msgpack.Marshal(v)
+		},
+		Unmarshal: func(b []byte, v interface{}) error {
+			return msgpack.Unmarshal(b, v)
 		},
 	}
 }

@@ -1,4 +1,4 @@
-package services
+package courseservice
 
 import (
 	"github.com/ednesic/coursemanagement/types"
