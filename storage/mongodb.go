@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var instance *Impl
+var instance DataAccessLayer
 var once sync.Once
 
 
@@ -28,7 +28,9 @@ type DataAccessLayer interface {
 
 func GetInstance() DataAccessLayer {
 	once.Do(func() {
-		instance = &Impl{}
+		if instance == nil {
+			instance = &Impl{}
+		}
 	})
 	return instance
 }
@@ -50,9 +52,9 @@ func (m *Impl) Initialize(dbURI, dbName, collection string) error {
 		return err
 	}
 
-	instance.collection = client.Database(dbName).Collection(collection)
-	instance.dbName = dbName
-	instance.client = client
+	m.collection = client.Database(dbName).Collection(collection)
+	m.dbName = dbName
+	m.client = client
 	return nil
 }
 

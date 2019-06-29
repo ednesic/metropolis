@@ -26,7 +26,9 @@ type Impl struct {}
 
 func GetInstance() CourseService {
 	once.Do(func() {
-		instance = &Impl{}
+		if instance == nil {
+			instance = &Impl{}
+		}
 	})
 	return instance
 }

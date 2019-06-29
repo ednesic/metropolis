@@ -9,6 +9,10 @@ type RedisMock struct {
 	mock.Mock
 }
 
+func (rc *RedisMock) Initialize(map[string]string) {
+	instance = rc
+}
+
 func (rc *RedisMock) Get(key string, object interface{}) error {
 	args := rc.Called(key, object)
 	return args.Error(0)

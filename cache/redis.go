@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-var instance *Redis
+var instance RedisClient
 var once sync.Once
 
 type RedisClient interface {
@@ -25,17 +25,19 @@ type Redis struct {
 
 func GetInstance() RedisClient {
 	once.Do(func() {
-		instance = &Redis{}
+		if instance == nil {
+			instance = &Redis{}
+		}
 	})
 	return instance
 }
 
 func (rc *Redis) Initialize(hosts map[string]string) {
-	instance.ring = redis.NewRing(&redis.RingOptions{
+	rc.ring = redis.NewRing(&redis.RingOptions{
 		Addrs: hosts,
 	})
-	instance.Codec = &cache.Codec{
-		Redis: instance.ring,
+	rc.Codec = &cache.Codec{
+		Redis: rc.ring,
 
 		Marshal: func(v interface{}) ([]byte, error) {
 			return msgpack.Marshal(v)

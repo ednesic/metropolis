@@ -3,7 +3,6 @@ package courseservice
 import (
 	"errors"
 	redis "github.com/ednesic/coursemanagement/cache"
-	"github.com/ednesic/coursemanagement/repositorymanager"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/go-redis/cache"
@@ -16,13 +15,12 @@ func TestCourseFindOne_FindsCourseCached(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	testName := "test01"
 	redisCourseMock := types.Course{Name: testName}
+	redisMock.Initialize(map[string]string{})
 
 	redisMock.On("Get", coll+testName, mock.Anything).Return(nil).Run(func(args mock.Arguments) {
 		arg := args.Get(1).(*types.Course)
 		*arg = redisCourseMock
 	}).Once()
-
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -38,6 +36,8 @@ func TestCourseFindOne_DoNotFindCourseCached(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	testName := "test01"
 	mongoCourseMock := types.Course{Name: testName}
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	redisMock.On("Get", coll+testName, mock.Anything).Return(cache.ErrCacheMiss).Once()
 	mongoMock.On("FindOne", coll, mock.Anything, mock.AnythingOfType("*types.Course")).Run(func(args mock.Arguments) {
@@ -45,9 +45,6 @@ func TestCourseFindOne_DoNotFindCourseCached(t *testing.T) {
 		*arg = mongoCourseMock
 	}).Return(nil).Once()
 	redisMock.On("Set", mock.Anything).Return(nil).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -63,10 +60,10 @@ func TestCourseCreate_ErrOnInsert(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	testCourse := types.Course{Name: "test02"}
 	errMock := errors.New("insert err")
+	_ = mongoMock.Initialize("", "", "")
 
 	mongoMock.On("Insert", coll, mock.AnythingOfType("types.Course")).Return(errMock).Once()
 
-	repositorymanager.Dal = mongoMock
 
 	courseService := Impl{}
 
@@ -80,12 +77,11 @@ func TestCourseCreate_ErrOnCache(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	testCourse := types.Course{Name: "test02"}
 	errMock := errors.New("insert err")
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	mongoMock.On("Insert", coll, mock.AnythingOfType("types.Course")).Return(nil).Once()
 	redisMock.On("Set", mock.Anything).Return(errMock).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -99,12 +95,11 @@ func TestCourseCreate_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	redisMock := &redis.RedisMock{}
 	testCourse := types.Course{Name: "test02"}
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	mongoMock.On("Insert", coll, mock.AnythingOfType("types.Course")).Return(nil).Once()
 	redisMock.On("Set", mock.Anything).Return(nil).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -118,10 +113,10 @@ func TestCourseUpdate_ErrUpdate(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	testCourse := types.Course{Name: "test02"}
 	errMock := errors.New("err update")
+	_ = mongoMock.Initialize("", "", "")
 
 	mongoMock.On("Update", coll, mock.Anything, mock.AnythingOfType("*types.Course")).Return(errMock).Once()
 
-	repositorymanager.Dal = mongoMock
 
 	courseService := Impl{}
 
@@ -135,12 +130,11 @@ func TestCourseUpdate_ErrCache(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	testCourse := types.Course{Name: "test02"}
 	errMock := errors.New("err update")
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	mongoMock.On("Update", coll, mock.Anything, mock.AnythingOfType("*types.Course")).Return(nil).Once()
 	redisMock.On("Delete", mock.Anything).Return(errMock).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -154,12 +148,11 @@ func TestCourseUpdate_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	redisMock := &redis.RedisMock{}
 	testCourse := types.Course{Name: "test02"}
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	mongoMock.On("Update", coll, mock.Anything, mock.AnythingOfType("*types.Course")).Return(nil).Once()
 	redisMock.On("Delete", mock.Anything).Return(nil).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -173,13 +166,12 @@ func TestCourseFindAll_SuccessGetCache(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	suffix := "all"
 	redisCourseMock := []types.Course {{Name: "test03"}, {Name: "test04"}}
+	redisMock.Initialize(map[string]string{})
 
 	redisMock.On("Get", coll+suffix, mock.Anything).Return(nil).Run(func(args mock.Arguments) {
 		arg := args.Get(1).(*[]types.Course)
 		*arg = redisCourseMock
 	}).Once()
-
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -195,12 +187,11 @@ func TestCourseFindAll_ErrGet(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	suffix := "all"
 	errMock := errors.New("err find")
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	redisMock.On("Get", coll+suffix, mock.Anything).Return(cache.ErrCacheMiss).Once()
 	mongoMock.On("Find", coll, mock.Anything, mock.AnythingOfType("*[]types.Course")).Return(errMock).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -217,13 +208,12 @@ func TestCourseFindAll_ErrSetCache(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	suffix := "all"
 	errMock := errors.New("err set cache")
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	redisMock.On("Get", coll+suffix, mock.Anything).Return(cache.ErrCacheMiss).Once()
 	mongoMock.On("Find", coll, mock.Anything, mock.AnythingOfType("*[]types.Course")).Return(nil).Once()
 	redisMock.On("Set", mock.Anything).Return(errMock).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -240,6 +230,8 @@ func TestCourseFindAll_Success(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	suffix := "all"
 	mongoCourseMock := []types.Course {{Name: "test03"}, {Name: "test04"}}
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	redisMock.On("Get", coll+suffix, mock.Anything).Return(cache.ErrCacheMiss).Once()
 	mongoMock.On("Find", coll, mock.Anything, mock.AnythingOfType("*[]types.Course")).Run(func(args mock.Arguments) {
@@ -247,9 +239,6 @@ func TestCourseFindAll_Success(t *testing.T) {
 		*arg = mongoCourseMock
 	}).Return(nil).Once()
 	redisMock.On("Set", mock.Anything).Return(nil).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -266,8 +255,7 @@ func TestCourseDelete_ErrDelete(t *testing.T) {
 	errMock := errors.New("err delete")
 	mongoMock.On("Remove", coll, mock.Anything).Return(errMock).Once()
 	testCourse := "test02"
-
-	repositorymanager.Dal = mongoMock
+	_ = mongoMock.Initialize("", "", "")
 
 	courseService := Impl{}
 
@@ -282,12 +270,11 @@ func TestCourseDelete_ErrCache(t *testing.T) {
 	redisMock := &redis.RedisMock{}
 	errMock := errors.New("err delete")
 	testCourse := "test02"
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	redisMock.On("Delete", coll+ testCourse).Return(errMock).Once()
 	mongoMock.On("Remove", coll, mock.Anything).Return(nil).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 
@@ -302,12 +289,11 @@ func TestCourseDelete_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
 	redisMock := &redis.RedisMock{}
 	testCourse := "test02"
+	redisMock.Initialize(map[string]string{})
+	_ = mongoMock.Initialize("", "", "")
 
 	redisMock.On("Delete", coll+ testCourse).Return(nil).Once()
 	mongoMock.On("Remove", coll, mock.Anything).Return(nil).Once()
-
-	repositorymanager.Dal = mongoMock
-	repositorymanager.Redis = redisMock
 
 	courseService := Impl{}
 

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ednesic/coursemanagement/cache"
-	"github.com/ednesic/coursemanagement/servicemanager"
 	"github.com/ednesic/coursemanagement/services/courseservice"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
@@ -43,7 +42,7 @@ func TestGetCourse(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var courseServiceMngr = &courseservice.CourseServiceMock{}
 			courseServiceMngr.On("FindOne", tt.fields.name).Return(tt.want.course, tt.fields.mockErr).Once()
-			servicemanager.CourseService = courseServiceMngr
+			courseServiceMngr.InitMock()
 
 			e := echo.New()
 			req := httptest.NewRequest(http.MethodGet, "/course", nil)
@@ -67,7 +66,7 @@ func TestGetCourse(t *testing.T) {
 func BenchmarkGetCourse (b *testing.B) {
 	var courseServiceMngr = &courseservice.CourseServiceMock{}
 	courseServiceMngr.On("FindOne", mock.Anything).Return(types.Course{Name: "bench"}, nil)
-	servicemanager.CourseService = courseServiceMngr
+	courseServiceMngr.InitMock()
 
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/course", nil)
@@ -105,7 +104,7 @@ func TestGetCourses(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var courseServiceMngr = &courseservice.CourseServiceMock{}
 			courseServiceMngr.On("FindAll").Return(tt.mock.courses, tt.mock.err).Once()
-			servicemanager.CourseService = courseServiceMngr
+			courseServiceMngr.InitMock()
 
 			e := echo.New()
 			req := httptest.NewRequest(http.MethodGet, "/course", nil)
@@ -127,7 +126,7 @@ func TestGetCourses(t *testing.T) {
 func BenchmarkGetCourses (b *testing.B) {
 	var courseServiceMngr = &courseservice.CourseServiceMock{}
 	courseServiceMngr.On("FindAll").Return([]types.Course{}, nil)
-	servicemanager.CourseService = courseServiceMngr
+	courseServiceMngr.InitMock()
 
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/course", nil)
@@ -167,7 +166,7 @@ func TestSetCourse(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var courseServiceMngr = &courseservice.CourseServiceMock{}
 			courseServiceMngr.On("Create", tt.field.body).Return(tt.mock.err).Maybe().Times(tt.mock.mongoMockTimes)
-			servicemanager.CourseService = courseServiceMngr
+			courseServiceMngr.InitMock()
 
 			out, err := json.Marshal(tt.field.body)
 			assert.NoError(t, err)
@@ -194,7 +193,7 @@ func TestSetCourse(t *testing.T) {
 func BenchmarkSetCourse(b *testing.B) {
 	var courseServiceMngr = &courseservice.CourseServiceMock{}
 	courseServiceMngr.On("Create", mock.Anything).Return(nil)
-	servicemanager.CourseService = courseServiceMngr
+	courseServiceMngr.InitMock()
 
 	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewUrlVideo: "bench"})
 	e := echo.New()
@@ -236,7 +235,7 @@ func TestPutCourse(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var courseServiceMngr = &courseservice.CourseServiceMock{}
 			courseServiceMngr.On("Update", tt.field.body).Return(tt.mock.err).Maybe().Times(tt.mock.mongoMockTimes)
-			servicemanager.CourseService = courseServiceMngr
+			courseServiceMngr.InitMock()
 
 			out, err := json.Marshal(tt.field.body)
 			assert.NoError(t, err)
@@ -263,7 +262,7 @@ func TestPutCourse(t *testing.T) {
 func BenchmarkPutCourse(b *testing.B) {
 	var courseServiceMngr = &courseservice.CourseServiceMock{}
 	courseServiceMngr.On("Update", mock.Anything).Return(nil)
-	servicemanager.CourseService = courseServiceMngr
+	courseServiceMngr.InitMock()
 
 	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewUrlVideo: "bench"})
 	e := echo.New()
@@ -301,7 +300,7 @@ func TestDelCourse(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var courseServiceMngr = &courseservice.CourseServiceMock{}
 			courseServiceMngr.On("Delete", tt.fields.name).Return(tt.fields.err).Once()
-			servicemanager.CourseService = courseServiceMngr
+			courseServiceMngr.InitMock()
 
 			e := echo.New()
 			req := httptest.NewRequest(http.MethodDelete, "/course", nil)
@@ -321,7 +320,7 @@ func TestDelCourse(t *testing.T) {
 func BenchmarkDelCourse (b *testing.B) {
 	var courseServiceMngr = &courseservice.CourseServiceMock{}
 	courseServiceMngr.On("Delete", mock.Anything).Return(nil)
-	servicemanager.CourseService = courseServiceMngr
+	courseServiceMngr.InitMock()
 
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodDelete, "/course", nil)

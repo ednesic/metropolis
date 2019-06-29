@@ -2,18 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b8e1de6f-2cc2-4af2-9324-298e89c7c195" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/cache/error.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cache/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/cache/redis.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/course.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/redis_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/cache/redis_mock.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/course_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/course_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositorymanager/repositorymanager.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/servicemanager/servicemanager.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/courseservice/course.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/course_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/courseservice/course_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/course_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/courseservice/course_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/new_mongodb.go" beforeDir="false" afterPath="$PROJECT_DIR$/storage/new_mongodb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/courseservice/course.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/courseservice/course.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/courseservice/course_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/courseservice/course_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/courseservice/course_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/courseservice/course_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/mongodb_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/storage/mongodb_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/new_mongodb.go" beforeDir="false" afterPath="$PROJECT_DIR$/storage/mongodb.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -83,7 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go">
+  <component name="RunManager" selected="Go Test.course_test.go (1)">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$" />
@@ -109,6 +106,17 @@
       <pattern value="^BenchmarkPutCourse$" />
       <method v="2" />
     </configuration>
+    <configuration name="TestCourseFindOne_FindsCourseCached in github.com/ednesic/coursemanagement/services/courseservice" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="coursemanagement" />
+      <working_directory value="$PROJECT_DIR$/services/courseservice" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/ednesic/coursemanagement/services/courseservice" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestCourseFindOne_FindsCourseCached$" />
+      <method v="2" />
+    </configuration>
     <configuration name="course_test.go (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
       <working_directory value="$PROJECT_DIR$/handlers" />
@@ -119,40 +127,30 @@
       <filePath value="$PROJECT_DIR$/handlers/course_test.go" />
       <method v="2" />
     </configuration>
-    <configuration name="course_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="go test github.com/ednesic/coursemanagement/services/courseservice" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="coursemanagement" />
-      <working_directory value="$PROJECT_DIR$/services" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <package value="github.com/ednesic/coursemanagement" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/services/course_test.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go test github.com/ednesic/coursemanagement/handlers" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="coursemanagement" />
-      <working_directory value="$PROJECT_DIR$/handlers" />
+      <working_directory value="$PROJECT_DIR$/services/courseservice" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/ednesic/coursemanagement/handlers" />
+      <package value="github.com/ednesic/coursemanagement/services/courseservice" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Go Build.go build main.go" />
-      <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/handlers" />
-      <item itemvalue="Go Test.course_test.go" />
       <item itemvalue="Go Test.course_test.go (1)" />
       <item itemvalue="Go Test.BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" />
+      <item itemvalue="Go Test.TestCourseFindOne_FindsCourseCached in github.com/ednesic/coursemanagement/services/courseservice" />
+      <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/services/courseservice" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.course_test.go (1)" />
+        <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/services/courseservice" />
+        <item itemvalue="Go Test.TestCourseFindOne_FindsCourseCached in github.com/ednesic/coursemanagement/services/courseservice" />
         <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Test.BenchmarkPutCourse in github.com/ednesic/coursemanagement/handlers" />
-        <item itemvalue="Go Test.course_test.go (1)" />
-        <item itemvalue="Go Test.course_test.go" />
-        <item itemvalue="Go Test.go test github.com/ednesic/coursemanagement/handlers" />
       </list>
     </recent_temporary>
   </component>
@@ -182,11 +180,6 @@
           <url>file://$PROJECT_DIR$/middleware/middleware.go</url>
           <line>11</line>
           <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/handlers/course.go</url>
-          <line>51</line>
-          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

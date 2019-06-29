@@ -8,6 +8,11 @@ type DataAccessLayerMock struct {
 	mock.Mock
 }
 
+func (m *DataAccessLayerMock) Initialize(dbURI, dbName, collection string) error {
+	 instance = m
+	 return nil
+}
+
 func (m *DataAccessLayerMock) Insert(collName string, doc interface{}) error {
 	args := m.Called(collName, doc)
 	return args.Error(0)

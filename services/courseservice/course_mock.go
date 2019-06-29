@@ -9,6 +9,10 @@ type CourseServiceMock struct {
 	mock.Mock
 }
 
+func (s *CourseServiceMock) InitMock() {
+	instance = s
+}
+
 func (s *CourseServiceMock) FindOne(name string) (c types.Course, err error) {
 	args := s.Called(name)
 	return args.Get(0).(types.Course), args.Error(1)
