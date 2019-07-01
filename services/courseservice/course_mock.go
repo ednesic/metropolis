@@ -1,4 +1,4 @@
-package services
+package courseservice
 
 import (
 	"github.com/ednesic/coursemanagement/types"
@@ -7,6 +7,10 @@ import (
 
 type CourseServiceMock struct {
 	mock.Mock
+}
+
+func (s *CourseServiceMock) InitMock() {
+	instance = s
 }
 
 func (s *CourseServiceMock) FindOne(name string) (c types.Course, err error) {

@@ -7,8 +7,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"reflect"
+	"sync"
 	"time"
 )
+
+var instance DataAccessLayer
+var once sync.Once
+
 
 type DataAccessLayer interface {
 	Insert(collName string, doc interface{}) error
@@ -17,45 +22,51 @@ type DataAccessLayer interface {
 	Count(collName string, query map[string]interface{}) (int64, error)
 	Update(collName string, selector map[string]interface{}, update interface{}) error
 	Remove(collName string, selector map[string]interface{}) error
+	Initialize(dbURI, dbName, collection string) error
 	Disconnect()
 }
 
+func GetInstance() DataAccessLayer {
+	once.Do(func() {
+		if instance == nil {
+			instance = &Impl{}
+		}
+	})
+	return instance
+}
 
-type MongoConnectDAL struct {
+type Impl struct {
 	collection *mongo.Collection
 	dbName  string
 	client *mongo.Client
 }
 
-func NewMongoConnectDAL(dbURI string, dbName string) (DataAccessLayer, error) {
+func (m *Impl) Initialize(dbURI, dbName, collection string) error {
 	ctx, _ := context.WithTimeout(context.Background(), 2 * time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		return nil, err
+		return err
 	}
-	collection := client.Database(dbName).Collection("course")
 
-	newMongo := &MongoConnectDAL{
-		collection: collection,
-		dbName:  dbName,
-		client: client,
-	}
-	return newMongo, err
+	m.collection = client.Database(dbName).Collection(collection)
+	m.dbName = dbName
+	m.client = client
+	return nil
 }
 
 // Insert stores documents in the collection
-func (m *MongoConnectDAL) Insert(collName string, doc interface{}) error {
+func (m *Impl) Insert(collName string, doc interface{}) error {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	_, err := m.collection.InsertOne(ctx, doc)
 	return err
 }
 
 // Find finds all documents in the collection
-func (m *MongoConnectDAL) Find(collName string, query map[string]interface{}, doc interface{}) error {
+func (m *Impl) Find(collName string, query map[string]interface{}, doc interface{}) error {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	cur, err := m.collection.Find(ctx, query)
 	if err != nil {
@@ -89,13 +100,13 @@ func (m *MongoConnectDAL) Find(collName string, query map[string]interface{}, do
 }
 
 // FindOne finds one document in mongo
-func (m *MongoConnectDAL) FindOne(collName string, query map[string]interface{}, doc interface{}) error {
+func (m *Impl) FindOne(collName string, query map[string]interface{}, doc interface{}) error {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	return m.collection.FindOne(ctx, query).Decode(doc)
 }
 
 // Update updates one or more documents in the collection
-func (m *MongoConnectDAL) Update(collName string, selector map[string]interface{}, update interface{}) error {
+func (m *Impl) Update(collName string, selector map[string]interface{}, update interface{}) error {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 
 	_, err := m.collection.UpdateOne(ctx, selector, map[string]interface{}{"$set": update})
@@ -103,7 +114,7 @@ func (m *MongoConnectDAL) Update(collName string, selector map[string]interface{
 }
 
 // Remove one or more documents in the collection
-func (m *MongoConnectDAL) Remove(collName string, selector map[string]interface{}) error {
+func (m *Impl) Remove(collName string, selector map[string]interface{}) error {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 
 	_, err := m.collection.DeleteOne(ctx, selector)
@@ -111,12 +122,12 @@ func (m *MongoConnectDAL) Remove(collName string, selector map[string]interface{
 }
 
 // Count returns the number of documents of the query
-func (m *MongoConnectDAL) Count(collName string, query map[string]interface{}) (int64, error) {
+func (m *Impl) Count(collName string, query map[string]interface{}) (int64, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	return m.collection.CountDocuments(ctx, query)
 }
 
-func (m *MongoConnectDAL) Disconnect() {
+func (m *Impl) Disconnect() {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	_ = m.client.Disconnect(ctx)
 }

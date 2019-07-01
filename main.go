@@ -4,9 +4,6 @@ import (
 	"context"
 	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/metrics"
-	"github.com/ednesic/coursemanagement/repositorymanager"
-	"github.com/ednesic/coursemanagement/servicemanager"
-	"github.com/ednesic/coursemanagement/services"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -28,11 +25,12 @@ func main() {
 		e.Logger.SetLevel(log.INFO)
 	}
 
-	servicemanager.CourseService = services.NewCourseService()
-	repositorymanager.Redis = cache.NewRedisClient(map[string]string{ "server1": os.Getenv("COURSE_REDIS_HOST")})
-	repositorymanager.Dal, err = storage.NewMongoConnectDAL(
+	cache.GetInstance().Initialize(map[string]string{ "server1": os.Getenv("COURSE_REDIS_HOST")})
+	err = storage.GetInstance().Initialize(
 		os.Getenv("COURSE_DB_HOST"),
-		os.Getenv("COURSE_DB"))
+		os.Getenv("COURSE_DB"),
+		"course",
+	)
 
 	if err != nil {
 		e.Logger.Fatal("Could not resolve Data access layer: ", err)
@@ -66,6 +64,6 @@ func main() {
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
 	}
-	repositorymanager.Dal.Disconnect()
-	repositorymanager.Redis.Disconnect()
+	cache.GetInstance().Disconnect()
+	storage.GetInstance().Disconnect()
 }
