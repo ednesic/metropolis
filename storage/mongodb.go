@@ -16,33 +16,35 @@ var once sync.Once
 
 
 type DataAccessLayer interface {
-	Insert(collName string, doc interface{}) error
-	Find(collName string, query map[string]interface{}, doc interface{}) error
-	FindOne(collName string, query map[string]interface{}, doc interface{}) error
-	Count(collName string, query map[string]interface{}) (int64, error)
-	Update(collName string, selector map[string]interface{}, update interface{}) error
-	Remove(collName string, selector map[string]interface{}) error
-	Initialize(dbURI, dbName, collection string) error
+	Insert(context.Context, string, interface{}) error
+	Find(context.Context, string, map[string]interface{}, interface{}) error
+	FindOne(context.Context, string, map[string]interface{}, interface{}) error
+	Count(context.Context, string, map[string]interface{}) (int64, error)
+	Update(context.Context, string, map[string]interface{}, interface{}) error
+	Remove(context.Context, string, map[string]interface{}) error
+	Initialize(string, string, string) error
+	StartSession() (Session, error)
 	Disconnect()
 }
 
 func GetInstance() DataAccessLayer {
 	once.Do(func() {
 		if instance == nil {
-			instance = &Impl{}
+			instance = &impl{}
 		}
 	})
 	return instance
 }
 
-type Impl struct {
+type impl struct {
 	collection *mongo.Collection
 	dbName  string
 	client *mongo.Client
 }
 
-func (m *Impl) Initialize(dbURI, dbName, collection string) error {
-	ctx, _ := context.WithTimeout(context.Background(), 2 * time.Second)
+func (m *impl) Initialize(dbURI, dbName, collection string) error {
+	ctx := context.Background()
+	//ctx, _ := context.WithTimeout(context.Background(), 2 * time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
 	if err != nil {
 		return err
@@ -58,16 +60,26 @@ func (m *Impl) Initialize(dbURI, dbName, collection string) error {
 	return nil
 }
 
+func (m *impl) StartSession() (Session, error) {
+	var err error
+	var session mongo.Session
+	if session, err = m.client.StartSession(); err != nil {
+		return nil, err
+	}
+	if err = session.StartTransaction(); err != nil {
+		return nil, err
+	}
+	return &sss{session}, nil
+}
+
 // Insert stores documents in the collection
-func (m *Impl) Insert(collName string, doc interface{}) error {
-	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
+func (m *impl) Insert(ctx context.Context, collName string, doc interface{}) error {
 	_, err := m.collection.InsertOne(ctx, doc)
 	return err
 }
 
 // Find finds all documents in the collection
-func (m *Impl) Find(collName string, query map[string]interface{}, doc interface{}) error {
-	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
+func (m *impl) Find(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) error {
 	cur, err := m.collection.Find(ctx, query)
 	if err != nil {
 		return err
@@ -100,34 +112,28 @@ func (m *Impl) Find(collName string, query map[string]interface{}, doc interface
 }
 
 // FindOne finds one document in mongo
-func (m *Impl) FindOne(collName string, query map[string]interface{}, doc interface{}) error {
-	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
+func (m *impl) FindOne(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) error {
 	return m.collection.FindOne(ctx, query).Decode(doc)
 }
 
 // Update updates one or more documents in the collection
-func (m *Impl) Update(collName string, selector map[string]interface{}, update interface{}) error {
-	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
-
+func (m *impl) Update(ctx context.Context, collName string, selector map[string]interface{}, update interface{}) error {
 	_, err := m.collection.UpdateOne(ctx, selector, map[string]interface{}{"$set": update})
 	return err
 }
 
 // Remove one or more documents in the collection
-func (m *Impl) Remove(collName string, selector map[string]interface{}) error {
-	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
-
+func (m *impl) Remove(ctx context.Context, collName string, selector map[string]interface{}) error {
 	_, err := m.collection.DeleteOne(ctx, selector)
 	return err
 }
 
 // Count returns the number of documents of the query
-func (m *Impl) Count(collName string, query map[string]interface{}) (int64, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
+func (m *impl) Count(ctx context.Context, collName string, query map[string]interface{}) (int64, error) {
 	return m.collection.CountDocuments(ctx, query)
 }
 
-func (m *Impl) Disconnect() {
+func (m *impl) Disconnect() {
 	ctx, _ := context.WithTimeout(context.Background(), 1 * time.Second)
 	_ = m.client.Disconnect(ctx)
 }

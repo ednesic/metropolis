@@ -1,10 +1,10 @@
 package courseservice
 
 import (
-	redisrepository "github.com/ednesic/coursemanagement/cache"
+	"context"
+	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
-	"github.com/go-redis/cache"
 	"sync"
 	"time"
 )
@@ -22,60 +22,93 @@ type CourseService interface {
 	FindOne(string) (types.Course, error)
 }
 
-type Impl struct {}
+type impl struct {}
 
 func GetInstance() CourseService {
 	once.Do(func() {
 		if instance == nil {
-			instance = &Impl{}
+			instance = &impl{}
 		}
 	})
 	return instance
 }
 
-func (s *Impl) FindOne(name string) (c types.Course, err error) {
+func (s *impl) FindOne(name string) (c types.Course, err error) {
 	var mgoErr error
-	if err := redisrepository.GetInstance().Get(coll+name, &c); err != nil {
-		if mgoErr = storage.GetInstance().FindOne(coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
-			return c, redisrepository.GetInstance().Set(&cache.Item{Key: coll + name, Object: c, Expiration: time.Minute})
+	ctx := context.Background()
+	if err := cache.GetInstance().Get(coll+name, &c); err != nil {
+		if mgoErr = storage.GetInstance().FindOne(ctx, coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
+			return c, cache.GetInstance().Set(coll + name, c, time.Minute)
 		}
 	}
 	return c, mgoErr
 }
 
-func (s *Impl) Create(course types.Course) error {
-	err := storage.GetInstance().Insert(coll, course)
+func (s *impl) Create(course types.Course) error {
+	ctx := context.Background()
+	err := storage.GetInstance().Insert(ctx, coll, course)
 	if err == nil {
-		return redisrepository.GetInstance().Set(&cache.Item{Key: coll + course.Name, Object: course, Expiration: time.Minute})
+		return cache.GetInstance().Set(coll + course.Name, course, time.Minute)
 	}
 	return err
 }
 
-func (s *Impl) Update(course types.Course) error {
-	err := storage.GetInstance().Update(coll, map[string]interface{}{"name": course.Name}, &course)
+func (s *impl) Update(course types.Course) error {
+	ctx := context.Background()
+	err := storage.GetInstance().Update(ctx, coll, map[string]interface{}{"name": course.Name}, &course)
 	if err == nil {
-		return redisrepository.GetInstance().Delete(coll + course.Name)
+		return cache.GetInstance().Delete(coll + course.Name)
 	}
 	return err
 }
 
-func (s *Impl) FindAll() ([]types.Course, error) {
+func (s *impl) FindAll() ([]types.Course, error) {
 	cs := []types.Course{}
+	ctx := context.Background()
 	var mgoErr error
 	suffixKey := "all"
 
-	if cacheErr := redisrepository.GetInstance().Get(coll + suffixKey, &cs); cacheErr != nil {
-		if mgoErr = storage.GetInstance().Find(coll, map[string]interface{}{}, &cs); mgoErr == nil {
-			return cs, redisrepository.GetInstance().Set(&cache.Item{Key: coll + suffixKey, Object: cs, Expiration: time.Minute})
+	if cacheErr := cache.GetInstance().Get(coll + suffixKey, &cs); cacheErr != nil {
+		if mgoErr = storage.GetInstance().Find(ctx, coll, map[string]interface{}{}, &cs); mgoErr == nil {
+			return cs, cache.GetInstance().Set(coll + suffixKey, cs, time.Minute)
 		}
 	}
 	return cs, mgoErr
 }
 
-func (s *Impl) Delete(name string) error {
-	err := storage.GetInstance().Remove(coll, map[string]interface{}{"name": name})
+func (s *impl) Delete(name string) error {
+	ctx := context.Background()
+	c, err := storage.GetInstance().StartSession()
+	if err != nil {
+		return err
+	}
+	err = c.WithTransaction(func(c context.Context) error {
+		err = storage.GetInstance().Insert(c, coll, &types.Course{Name: "test1533"})
+		if err != nil {
+			return err
+		}
+		return err
+	})
+	if err != nil {
+		return err
+	}
+	err = c.WithTransaction(func(c context.Context) error {
+		err = storage.GetInstance().Insert(c, coll, &types.Course{Name: "test4355"})
+		if err != nil {
+			return err
+		}
+		return err
+	})
+	if err != nil {
+		return err
+	}
+	err = c.Abort()
+	if err != nil {
+		return err
+	}
+	err = storage.GetInstance().Remove(ctx, coll, map[string]interface{}{"name": name})
 	if err == nil {
-		return redisrepository.GetInstance().Delete(coll + name)
+		return cache.GetInstance().Delete(coll + name)
 	}
 	return err
 }

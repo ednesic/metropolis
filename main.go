@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/ednesic/coursemanagement/cache"
+	"github.com/ednesic/coursemanagement/handlers"
 	"github.com/ednesic/coursemanagement/metrics"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/labstack/echo/v4"
@@ -13,7 +14,6 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/ednesic/coursemanagement/handlers"
 )
 
 func main() {
@@ -25,10 +25,10 @@ func main() {
 		e.Logger.SetLevel(log.INFO)
 	}
 
-	cache.GetInstance().Initialize(map[string]string{ "server1": os.Getenv("COURSE_REDIS_HOST")})
+	cache.GetInstance().Initialize(map[string]string{ "server1": os.Getenv("REDIS_HOST")})
 	err = storage.GetInstance().Initialize(
-		os.Getenv("COURSE_DB_HOST"),
-		os.Getenv("COURSE_DB"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB"),
 		"course",
 	)
 

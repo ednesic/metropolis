@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/vmihailenco/msgpack"
 	"sync"
+	"time"
 )
 
 var instance RedisClient
@@ -12,13 +13,13 @@ var once sync.Once
 
 type RedisClient interface {
 	Get(string, interface{}) error
-	Set(*cache.Item) error
+	Set(string, interface{}, time.Duration) error
 	Delete(string) error
 	Initialize(map[string]string)
 	Disconnect()
 }
 
-type Redis struct {
+type rImpl struct {
 	Codec *cache.Codec
 	ring *redis.Ring
 }
@@ -26,13 +27,13 @@ type Redis struct {
 func GetInstance() RedisClient {
 	once.Do(func() {
 		if instance == nil {
-			instance = &Redis{}
+			instance = &rImpl{}
 		}
 	})
 	return instance
 }
 
-func (rc *Redis) Initialize(hosts map[string]string) {
+func (rc *rImpl) Initialize(hosts map[string]string) {
 	rc.ring = redis.NewRing(&redis.RingOptions{
 		Addrs: hosts,
 	})
@@ -48,27 +49,27 @@ func (rc *Redis) Initialize(hosts map[string]string) {
 	}
 }
 
-func (rc *Redis) Get(key string, object interface{}) error {
+func (rc *rImpl) Get(key string, object interface{}) error {
 	if err := rc.Codec.Get(key, object); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
-func (rc *Redis) Set(item *cache.Item) error {
-	if err := rc.Codec.Set(item); err != nil {
+func (rc *rImpl) Set(k string, obj interface{}, d time.Duration) error {
+	if err := rc.Codec.Set(&cache.Item{Key: k, Object: obj, Expiration: d}); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
-func (rc *Redis) Delete(key string) error {
+func (rc *rImpl) Delete(key string) error {
 	if err := rc.Codec.Delete(key); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
-func (rc * Redis) Disconnect() {
+func (rc *rImpl) Disconnect() {
 	_ = rc.ring.Close()
 }

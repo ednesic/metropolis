@@ -7,5 +7,5 @@ type RedisErr struct {
 }
 
 func (e *RedisErr) Error() string {
-	return fmt.Sprintf("Redis err: %s", e.Msg)
+	return fmt.Sprintf("redis err: %s", e.Msg)
 }

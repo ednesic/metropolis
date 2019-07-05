@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"github.com/go-redis/cache"
 	"github.com/stretchr/testify/mock"
+	"time"
 )
 
 type RedisMock struct {
@@ -18,8 +18,8 @@ func (rc *RedisMock) Get(key string, object interface{}) error {
 	return args.Error(0)
 }
 
-func (rc *RedisMock) Set(item *cache.Item) error {
-	args := rc.Called(item)
+func (rc *RedisMock) Set(k string, obj interface{}, d time.Duration) error {
+	args := rc.Called(k, obj, d)
 	return args.Error(0)
 }
 
