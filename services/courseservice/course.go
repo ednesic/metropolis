@@ -2,18 +2,22 @@ package courseservice
 
 import (
 	"context"
+	"sync"
+	"time"
+
 	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
-	"sync"
-	"time"
 )
 
 const coll = "course"
 
-var instance CourseService
-var once sync.Once
+var (
+	instance CourseService
+	once     sync.Once
+)
 
+//CourseService is an interface for course service
 type CourseService interface {
 	Create(types.Course) error
 	Update(types.Course) error
@@ -24,6 +28,7 @@ type CourseService interface {
 
 type courseImpl struct{}
 
+//GetInstance to get service instance
 func GetInstance() CourseService {
 	once.Do(func() {
 		if instance == nil {

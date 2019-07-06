@@ -4,6 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
 	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/services/courseservice"
 	"github.com/ednesic/coursemanagement/storage"
@@ -12,15 +17,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"gopkg.in/mgo.v2"
-	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
 )
 
 func TestGetCourse(t *testing.T) {
 	type fields struct {
-		name string
+		name    string
 		mockErr error
 	}
 	type wants struct {
@@ -33,14 +34,14 @@ func TestGetCourse(t *testing.T) {
 		fields fields
 		want   wants
 	}{
-		{"Status ok", fields{name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewUrlVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status ok but redis err", fields{mockErr: &cache.RedisErr{}, name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewUrlVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
+		{"Status ok", fields{name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
+		{"Status ok but redis err", fields{mockErr: &cache.RedisErr{}, name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
 		{"Status notFound", fields{mockErr: storage.ErrNotFound, name: "nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
 		{"Status internal server error", fields{mockErr: mgo.ErrCursor, name: "nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var courseServiceMngr = &courseservice.CourseServiceMock{}
+			var courseServiceMngr = &courseservice.Mock{}
 			courseServiceMngr.On("FindOne", tt.fields.name).Return(tt.want.course, tt.fields.mockErr).Once()
 			courseServiceMngr.InitMock()
 
@@ -63,8 +64,8 @@ func TestGetCourse(t *testing.T) {
 	}
 }
 
-func BenchmarkGetCourse (b *testing.B) {
-	var courseServiceMngr = &courseservice.CourseServiceMock{}
+func BenchmarkGetCourse(b *testing.B) {
+	var courseServiceMngr = &courseservice.Mock{}
 	courseServiceMngr.On("FindOne", mock.Anything).Return(types.Course{Name: "bench"}, nil)
 	courseServiceMngr.InitMock()
 
@@ -76,7 +77,7 @@ func BenchmarkGetCourse (b *testing.B) {
 	c.SetParamValues("Bench")
 
 	for i := 0; i < b.N; i++ {
-		_ =  GetCourse(c)
+		_ = GetCourse(c)
 	}
 }
 
@@ -102,7 +103,7 @@ func TestGetCourses(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var courseServiceMngr = &courseservice.CourseServiceMock{}
+			var courseServiceMngr = &courseservice.Mock{}
 			courseServiceMngr.On("FindAll").Return(tt.mock.courses, tt.mock.err).Once()
 			courseServiceMngr.InitMock()
 
@@ -123,8 +124,8 @@ func TestGetCourses(t *testing.T) {
 	}
 }
 
-func BenchmarkGetCourses (b *testing.B) {
-	var courseServiceMngr = &courseservice.CourseServiceMock{}
+func BenchmarkGetCourses(b *testing.B) {
+	var courseServiceMngr = &courseservice.Mock{}
 	courseServiceMngr.On("FindAll").Return([]types.Course{}, nil)
 	courseServiceMngr.InitMock()
 
@@ -134,19 +135,19 @@ func BenchmarkGetCourses (b *testing.B) {
 	c := e.NewContext(req, rec)
 
 	for i := 0; i < b.N; i++ {
-		_ =  GetCourses(c)
+		_ = GetCourses(c)
 	}
 }
 
 func TestSetCourse(t *testing.T) {
 	type wants struct {
-		err error
+		err        error
 		statusCode int
 	}
 	type mocks struct {
 		mongoMockTimes int
-		course types.Course
-		err error
+		course         types.Course
+		err            error
 	}
 	type fields struct { //passar interface para bad request
 		body interface{}
@@ -157,14 +158,14 @@ func TestSetCourse(t *testing.T) {
 		mock  mocks
 		field fields
 	}{
-		{"Status ok", wants{statusCode:http.StatusOK}, mocks{mongoMockTimes: 1, course:types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
-		{"Status ok but redis err", wants{statusCode:http.StatusOK}, mocks{err: &cache.RedisErr{}, mongoMockTimes: 1, course:types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
-		{"Status bad request", wants{statusCode:http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
-		{"Status internal server error", wants{statusCode:http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
+		{"Status ok", wants{statusCode: http.StatusOK}, mocks{mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
+		{"Status ok but redis err", wants{statusCode: http.StatusOK}, mocks{err: &cache.RedisErr{}, mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
+		{"Status bad request", wants{statusCode: http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
+		{"Status internal server error", wants{statusCode: http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var courseServiceMngr = &courseservice.CourseServiceMock{}
+			var courseServiceMngr = &courseservice.Mock{}
 			courseServiceMngr.On("Create", tt.field.body).Return(tt.mock.err).Maybe().Times(tt.mock.mongoMockTimes)
 			courseServiceMngr.InitMock()
 
@@ -191,11 +192,11 @@ func TestSetCourse(t *testing.T) {
 }
 
 func BenchmarkSetCourse(b *testing.B) {
-	var courseServiceMngr = &courseservice.CourseServiceMock{}
+	var courseServiceMngr = &courseservice.Mock{}
 	courseServiceMngr.On("Create", mock.Anything).Return(nil)
 	courseServiceMngr.InitMock()
 
-	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewUrlVideo: "bench"})
+	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewURLVideo: "bench"})
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/course", strings.NewReader(string(out)))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -209,13 +210,13 @@ func BenchmarkSetCourse(b *testing.B) {
 
 func TestPutCourse(t *testing.T) {
 	type wants struct {
-		err error
+		err        error
 		statusCode int
 	}
 	type mocks struct {
 		mongoMockTimes int
-		course types.Course
-		err error
+		course         types.Course
+		err            error
 	}
 	type fields struct {
 		body interface{}
@@ -226,14 +227,14 @@ func TestPutCourse(t *testing.T) {
 		mock  mocks
 		field fields
 	}{
-		{"Status ok", wants{statusCode:http.StatusCreated}, mocks{mongoMockTimes: 1, course:types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
-		{"Status ok but redis err", wants{statusCode:http.StatusCreated}, mocks{err: &cache.RedisErr{}, mongoMockTimes: 1, course:types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
-		{"Status bad request", wants{statusCode:http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
-		{"Status internal server error", wants{statusCode:http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price : 10, Picture: "test.png", PreviewUrlVideo: "http://video"}}},
+		{"Status ok", wants{statusCode: http.StatusCreated}, mocks{mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
+		{"Status ok but redis err", wants{statusCode: http.StatusCreated}, mocks{err: &cache.RedisErr{}, mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
+		{"Status bad request", wants{statusCode: http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
+		{"Status internal server error", wants{statusCode: http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var courseServiceMngr = &courseservice.CourseServiceMock{}
+			var courseServiceMngr = &courseservice.Mock{}
 			courseServiceMngr.On("Update", tt.field.body).Return(tt.mock.err).Maybe().Times(tt.mock.mongoMockTimes)
 			courseServiceMngr.InitMock()
 
@@ -260,11 +261,11 @@ func TestPutCourse(t *testing.T) {
 }
 
 func BenchmarkPutCourse(b *testing.B) {
-	var courseServiceMngr = &courseservice.CourseServiceMock{}
+	var courseServiceMngr = &courseservice.Mock{}
 	courseServiceMngr.On("Update", mock.Anything).Return(nil)
 	courseServiceMngr.InitMock()
 
-	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewUrlVideo: "bench"})
+	out, _ := json.Marshal(types.Course{Name: "BEnch1", Price: 10, Picture: "bench", PreviewURLVideo: "bench"})
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPut, "/course", strings.NewReader(string(out)))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -272,14 +273,14 @@ func BenchmarkPutCourse(b *testing.B) {
 	c := e.NewContext(req, rec)
 
 	for i := 0; i < b.N; i++ {
-		_ =  PutCourse(c)
+		_ = PutCourse(c)
 	}
 }
 
 func TestDelCourse(t *testing.T) {
 	type fields struct {
 		name string
-		err error
+		err  error
 	}
 	type wants struct {
 		course     types.Course
@@ -291,14 +292,14 @@ func TestDelCourse(t *testing.T) {
 		fields fields
 		want   wants
 	}{
-		{"Status ok", fields{name:"nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewUrlVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status ok but redis err", fields{err: &cache.RedisErr{}, name:"nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewUrlVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status notFound", fields{err: storage.ErrNotFound, name:"nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
-		{"Status internal server error", fields{err: mgo.ErrCursor, name:"nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
+		{"Status ok", fields{name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
+		{"Status ok but redis err", fields{err: &cache.RedisErr{}, name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
+		{"Status notFound", fields{err: storage.ErrNotFound, name: "nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
+		{"Status internal server error", fields{err: mgo.ErrCursor, name: "nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var courseServiceMngr = &courseservice.CourseServiceMock{}
+			var courseServiceMngr = &courseservice.Mock{}
 			courseServiceMngr.On("Delete", tt.fields.name).Return(tt.fields.err).Once()
 			courseServiceMngr.InitMock()
 
@@ -316,9 +317,8 @@ func TestDelCourse(t *testing.T) {
 	}
 }
 
-
-func BenchmarkDelCourse (b *testing.B) {
-	var courseServiceMngr = &courseservice.CourseServiceMock{}
+func BenchmarkDelCourse(b *testing.B) {
+	var courseServiceMngr = &courseservice.Mock{}
 	courseServiceMngr.On("Delete", mock.Anything).Return(nil)
 	courseServiceMngr.InitMock()
 
@@ -330,6 +330,6 @@ func BenchmarkDelCourse (b *testing.B) {
 	c.SetParamValues("Bench")
 
 	for i := 0; i < b.N; i++ {
-		_ =  DelCourse(c)
+		_ = DelCourse(c)
 	}
 }

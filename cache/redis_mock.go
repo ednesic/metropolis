@@ -1,8 +1,9 @@
 package cache
 
 import (
-	"github.com/stretchr/testify/mock"
 	"time"
+
+	"github.com/stretchr/testify/mock"
 )
 
 type RedisMock struct {

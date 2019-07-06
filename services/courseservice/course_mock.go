@@ -5,35 +5,42 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type CourseServiceMock struct {
+//Mock is a mocked structure for course service
+type Mock struct {
 	mock.Mock
 }
 
-func (s *CourseServiceMock) InitMock() {
+//InitMock to initialize mock befores tests
+func (s *Mock) InitMock() {
 	instance = s
 }
 
-func (s *CourseServiceMock) FindOne(name string) (c types.Course, err error) {
+//FindOne is a mock for course service findOne
+func (s *Mock) FindOne(name string) (c types.Course, err error) {
 	args := s.Called(name)
 	return args.Get(0).(types.Course), args.Error(1)
 }
 
-func (s *CourseServiceMock) Create(course types.Course) error {
+//Create is a mock for course service create
+func (s *Mock) Create(course types.Course) error {
 	args := s.Called(course)
 	return args.Error(0)
 }
 
-func (s *CourseServiceMock) Update(course types.Course) error {
+//Update is a mock for course service update
+func (s *Mock) Update(course types.Course) error {
 	args := s.Called(course)
 	return args.Error(0)
 }
 
-func (s *CourseServiceMock) FindAll() (cs []types.Course, err error) {
+//FindAll is a mock for course service finaAll
+func (s *Mock) FindAll() (cs []types.Course, err error) {
 	args := s.Called()
 	return args.Get(0).([]types.Course), args.Error(1)
 }
 
-func (s *CourseServiceMock) Delete(name string) error {
+//Delete is a mock for course service delete
+func (s *Mock) Delete(name string) error {
 	args := s.Called(name)
 	return args.Error(0)
 }

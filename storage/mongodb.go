@@ -3,17 +3,21 @@ package storage
 import (
 	"context"
 	"errors"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"reflect"
 	"sync"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var instance DataAccessLayer
-var once sync.Once
+var (
+	instance DataAccessLayer
+	once     sync.Once
+)
 
+//DataAccessLayer is an interface for db connection
 type DataAccessLayer interface {
 	Insert(context.Context, string, interface{}) error
 	Find(context.Context, string, map[string]interface{}, interface{}) error
@@ -26,6 +30,7 @@ type DataAccessLayer interface {
 	Disconnect()
 }
 
+//GetInstance to get database instance
 func GetInstance() DataAccessLayer {
 	once.Do(func() {
 		if instance == nil {

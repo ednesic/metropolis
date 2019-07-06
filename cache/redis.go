@@ -1,15 +1,18 @@
 package cache
 
 import (
+	"sync"
+	"time"
+
 	"github.com/go-redis/cache"
 	"github.com/go-redis/redis"
 	"github.com/vmihailenco/msgpack"
-	"sync"
-	"time"
 )
 
-var instance RedisClient
-var once sync.Once
+var (
+	instance RedisClient
+	once     sync.Once
+)
 
 type RedisClient interface {
 	Get(string, interface{}) error
@@ -21,7 +24,7 @@ type RedisClient interface {
 
 type rImpl struct {
 	Codec *cache.Codec
-	ring *redis.Ring
+	ring  *redis.Ring
 }
 
 func GetInstance() RedisClient {

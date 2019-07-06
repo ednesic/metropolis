@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"time"
+
 	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/handlers"
 	"github.com/ednesic/coursemanagement/metrics"
@@ -10,9 +14,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"os"
-	"os/signal"
-	"time"
 )
 
 func main() {

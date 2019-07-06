@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/services/courseservice"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func GetCourse(c echo.Context) error {
@@ -86,7 +87,7 @@ func PutCourse(c echo.Context) error {
 
 	_ = c.NoContent(http.StatusInternalServerError)
 	return err
-	}
+}
 
 func DelCourse(c echo.Context) error {
 	name := c.Param("name")

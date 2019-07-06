@@ -5,9 +5,6 @@ import (
 )
 
 var (
+	//ErrNotFound for database not found documents
 	ErrNotFound = mongo.ErrNoDocuments
 )
-
-type ErrorResponse struct {
-	Message string `json:"message,omitempty"`
-}
