@@ -14,7 +14,7 @@ import (
 )
 
 func TestCourseFindOne_FindsCourseCached(t *testing.T) {
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testName := "test01"
 	redisCourseMock := types.Course{Name: testName}
 	redisMock.Initialize(map[string]string{})
@@ -35,7 +35,7 @@ func TestCourseFindOne_FindsCourseCached(t *testing.T) {
 
 func TestCourseFindOne_DoNotFindCourseCached(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testName := "test01"
 	mongoCourseMock := types.Course{Name: testName}
 	redisMock.Initialize(map[string]string{})
@@ -77,7 +77,7 @@ func TestCourseCreate_ErrOnInsert(t *testing.T) {
 
 func TestCourseCreate_ErrOnCache(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testCourse := types.Course{Name: "test02"}
 	errMock := errors.New("insert err")
 	redisMock.Initialize(map[string]string{})
@@ -97,7 +97,7 @@ func TestCourseCreate_ErrOnCache(t *testing.T) {
 
 func TestCourseCreate_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testCourse := types.Course{Name: "test02"}
 	redisMock.Initialize(map[string]string{})
 	_ = mongoMock.Initialize(context.Background(), "", "")
@@ -132,7 +132,7 @@ func TestCourseUpdate_ErrUpdate(t *testing.T) {
 
 func TestCourseUpdate_ErrCache(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testCourse := types.Course{Name: "test02"}
 	errMock := errors.New("err update")
 	redisMock.Initialize(map[string]string{})
@@ -152,7 +152,7 @@ func TestCourseUpdate_ErrCache(t *testing.T) {
 
 func TestCourseUpdate_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testCourse := types.Course{Name: "test02"}
 	redisMock.Initialize(map[string]string{})
 	_ = mongoMock.Initialize(context.Background(), "", "")
@@ -170,7 +170,7 @@ func TestCourseUpdate_Success(t *testing.T) {
 }
 
 func TestCourseFindAll_SuccessGetCache(t *testing.T) {
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	suffix := "all"
 	redisCourseMock := []types.Course{{Name: "test03"}, {Name: "test04"}}
 	redisMock.Initialize(map[string]string{})
@@ -192,7 +192,7 @@ func TestCourseFindAll_SuccessGetCache(t *testing.T) {
 
 func TestCourseFindAll_ErrGet(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	suffix := "all"
 	errMock := errors.New("err find")
 	redisMock.Initialize(map[string]string{})
@@ -213,7 +213,7 @@ func TestCourseFindAll_ErrGet(t *testing.T) {
 
 func TestCourseFindAll_ErrSetCache(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	suffix := "all"
 	errMock := errors.New("err set cache")
 	redisMock.Initialize(map[string]string{})
@@ -235,7 +235,7 @@ func TestCourseFindAll_ErrSetCache(t *testing.T) {
 
 func TestCourseFindAll_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	suffix := "all"
 	mongoCourseMock := []types.Course{{Name: "test03"}, {Name: "test04"}}
 	redisMock.Initialize(map[string]string{})
@@ -275,7 +275,7 @@ func TestCourseDelete_ErrDelete(t *testing.T) {
 
 func TestCourseDelete_ErrCache(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	errMock := errors.New("err delete")
 	testCourse := "test02"
 	redisMock.Initialize(map[string]string{})
@@ -295,7 +295,7 @@ func TestCourseDelete_ErrCache(t *testing.T) {
 
 func TestCourseDelete_Success(t *testing.T) {
 	mongoMock := &storage.DataAccessLayerMock{}
-	redisMock := &redis.RedisMock{}
+	redisMock := &redis.Mock{}
 	testCourse := "test02"
 	redisMock.Initialize(map[string]string{})
 	_ = mongoMock.Initialize(context.Background(), "", "")

@@ -10,6 +10,7 @@ import (
 )
 
 type (
+	//PrometheusConfig promotheus configuration
 	PrometheusConfig struct {
 		Skipper   middleware.Skipper
 		Namespace string
@@ -17,6 +18,7 @@ type (
 )
 
 var (
+	//DefaultPrometheusConfig default prometheus configuration
 	DefaultPrometheusConfig = PrometheusConfig{
 		Skipper:   middleware.DefaultSkipper,
 		Namespace: "echo",
@@ -24,13 +26,13 @@ var (
 )
 
 var (
-	echoReqQps      *prometheus.CounterVec
+	echoReqQPS      *prometheus.CounterVec
 	echoReqDuration *prometheus.SummaryVec
 	echoOutBytes    prometheus.Summary
 )
 
 func initCollector(namespace string) {
-	echoReqQps = prometheus.NewCounterVec(
+	echoReqQPS = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: namespace,
 			Name:      "http_request_total",
@@ -53,13 +55,15 @@ func initCollector(namespace string) {
 			Help:      "HTTP response bytes.",
 		},
 	)
-	prometheus.MustRegister(echoReqQps, echoReqDuration, echoOutBytes)
+	prometheus.MustRegister(echoReqQPS, echoReqDuration, echoOutBytes)
 }
 
+//NewMetric is a middleware to get information for prometheus
 func NewMetric() echo.MiddlewareFunc {
 	return NewMetricWithConfig(DefaultPrometheusConfig)
 }
 
+//NewMetricWithConfig is a middleware to get information for prometheus. In this method is possible to pass config.
 func NewMetricWithConfig(config PrometheusConfig) echo.MiddlewareFunc {
 	initCollector(config.Namespace)
 	if config.Skipper == nil {
@@ -81,7 +85,7 @@ func NewMetricWithConfig(config PrometheusConfig) echo.MiddlewareFunc {
 			status := strconv.Itoa(res.Status)
 			elapsed := time.Since(start).Seconds()
 			bytesOut := float64(res.Size)
-			echoReqQps.WithLabelValues(status, req.Method, req.Host, c.Path()).Inc()
+			echoReqQPS.WithLabelValues(status, req.Method, req.Host, c.Path()).Inc()
 			echoReqDuration.WithLabelValues(req.Method, req.Host, c.Path()).Observe(elapsed)
 			echoOutBytes.Observe(bytesOut)
 			return nil

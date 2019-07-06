@@ -10,11 +10,12 @@ import (
 )
 
 var (
-	instance RedisClient
+	instance Cache
 	once     sync.Once
 )
 
-type RedisClient interface {
+//Cache is an interface to handle cache
+type Cache interface {
 	Get(string, interface{}) error
 	Set(string, interface{}, time.Duration) error
 	Delete(string) error
@@ -27,7 +28,8 @@ type rImpl struct {
 	ring  *redis.Ring
 }
 
-func GetInstance() RedisClient {
+//GetInstance to return a redis client
+func GetInstance() Cache {
 	once.Do(func() {
 		if instance == nil {
 			instance = &rImpl{}

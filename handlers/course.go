@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+//GetCourse is a handler to get course passing a query parameter name
 func GetCourse(c echo.Context) error {
 	name := c.Param("name")
 	cr, err := courseservice.GetInstance().FindOne(name)
@@ -30,6 +31,7 @@ func GetCourse(c echo.Context) error {
 	return err
 }
 
+//GetCourses is a handler to get all courses
 func GetCourses(c echo.Context) error {
 	cs, err := courseservice.GetInstance().FindAll()
 
@@ -47,6 +49,7 @@ func GetCourses(c echo.Context) error {
 	return err
 }
 
+//SetCourse is a handler to create a course passing a type.Course in the body
 func SetCourse(c echo.Context) error {
 	var cr types.Course
 
@@ -68,6 +71,7 @@ func SetCourse(c echo.Context) error {
 	return err
 }
 
+//PutCourse is a handler to update a course passing a type.Course in the body
 func PutCourse(c echo.Context) error {
 	var cr types.Course
 
@@ -89,6 +93,7 @@ func PutCourse(c echo.Context) error {
 	return err
 }
 
+//DelCourse is a handler that deletes a course tha has a the query parameter name
 func DelCourse(c echo.Context) error {
 	name := c.Param("name")
 	httpStatus := http.StatusOK
