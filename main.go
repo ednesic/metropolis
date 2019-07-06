@@ -44,14 +44,15 @@ func main() {
 
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
-	e.GET("/courses/:name", handlers.GetCourse)
-	e.GET("/courses", handlers.GetCourses)
-	e.PUT("/courses", handlers.PutCourse)
-	e.POST("/courses", handlers.SetCourse)
-	e.DELETE("/courses/:name", handlers.DelCourse)
+	gCourse := e.Group("/courses")
+	gCourse.DELETE("/:name", handlers.DelCourse)
+	gCourse.GET("/:name", handlers.GetCourse)
+	gCourse.GET("", handlers.GetCourses)
+	gCourse.POST("", handlers.SetCourse)
+	gCourse.PUT("", handlers.PutCourse)
 
 	go func() {
-		if err := e.Start(":9090"); err != nil {
+		if err := e.Start(":" + os.Getenv("PORT")); err != nil {
 			e.Logger.Info("shutting down the server")
 		}
 	}()
