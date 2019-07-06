@@ -9,14 +9,14 @@ type DataAccessLayerMock struct {
 	mock.Mock
 }
 
-func (m *DataAccessLayerMock) StartSession() (Session, error) {
-	args := m.Called()
-	return &sessionMock{} , args.Error(1)
+func (m *DataAccessLayerMock) WithTransaction(ctx context.Context, fn func(context.Context) error) error {
+	args := m.Called(ctx, fn)
+	return args.Error(0)
 }
 
-func (m *DataAccessLayerMock) Initialize(dbURI, dbName, collection string) error {
-	 instance = m
-	 return nil
+func (m *DataAccessLayerMock) Initialize(ctx context.Context, dbURI, dbName string) error {
+	instance = m
+	return nil
 }
 
 func (m *DataAccessLayerMock) Insert(ctx context.Context, collName string, doc interface{}) error {

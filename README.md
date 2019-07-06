@@ -5,3 +5,6 @@
   - DB
 - add transaction for fun
 - too many clients for more services
+
+
+mudar os context

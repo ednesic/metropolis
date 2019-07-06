@@ -13,7 +13,6 @@ import (
 	"os"
 	"os/signal"
 	"time"
-
 )
 
 func main() {
@@ -25,11 +24,11 @@ func main() {
 		e.Logger.SetLevel(log.INFO)
 	}
 
-	cache.GetInstance().Initialize(map[string]string{ "server1": os.Getenv("REDIS_HOST")})
+	cache.GetInstance().Initialize(map[string]string{"server1": os.Getenv("REDIS_HOST")})
 	err = storage.GetInstance().Initialize(
+		context.Background(),
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB"),
-		"course",
 	)
 
 	if err != nil {
