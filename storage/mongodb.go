@@ -136,6 +136,7 @@ func (m *mongodbImpl) Count(ctx context.Context, collName string, query map[stri
 }
 
 func (m *mongodbImpl) Disconnect() {
-	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
 	_ = m.client.Disconnect(ctx)
 }

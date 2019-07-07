@@ -40,7 +40,8 @@ func GetInstance() CourseService {
 
 func (s *courseImpl) FindOne(name string) (c types.Course, err error) {
 	var mgoErr error
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
+	defer cancel()
 	if err := cache.GetInstance().Get(coll+name, &c); err != nil {
 		if mgoErr = storage.GetInstance().FindOne(ctx, coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
 			return c, cache.GetInstance().Set(coll+name, c, time.Minute)
@@ -50,7 +51,8 @@ func (s *courseImpl) FindOne(name string) (c types.Course, err error) {
 }
 
 func (s *courseImpl) Create(course types.Course) error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
+	defer cancel()
 	err := storage.GetInstance().Insert(ctx, coll, course)
 	if err == nil {
 		return cache.GetInstance().Set(coll+course.Name, course, time.Minute)
@@ -59,7 +61,8 @@ func (s *courseImpl) Create(course types.Course) error {
 }
 
 func (s *courseImpl) Update(course types.Course) error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
+	defer cancel()
 	err := storage.
 		GetInstance().
 		Update(ctx, coll, map[string]interface{}{"name": course.Name}, map[string]interface{}{"$set": &course})
@@ -72,7 +75,8 @@ func (s *courseImpl) Update(course types.Course) error {
 func (s *courseImpl) FindAll() ([]types.Course, error) {
 	var mgoErr error
 	var cs []types.Course
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
+	defer cancel()
 	suffixKey := "all"
 
 	if cacheErr := cache.GetInstance().Get(coll+suffixKey, &cs); cacheErr != nil {
@@ -84,7 +88,8 @@ func (s *courseImpl) FindAll() ([]types.Course, error) {
 }
 
 func (s *courseImpl) Delete(name string) error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
+	defer cancel()
 	err := storage.GetInstance().Remove(ctx, coll, map[string]interface{}{"name": name})
 	if err == nil {
 		return cache.GetInstance().Delete(coll + name)

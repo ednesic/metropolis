@@ -20,6 +20,7 @@ func main() {
 	var err error
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
+	ctx, _ := context.WithTimeout(context.Background(), 2 * time.Second)
 
 	if os.Getenv("ENV") == "prod" {
 		e.Logger.SetLevel(log.INFO)
@@ -27,7 +28,7 @@ func main() {
 
 	cache.GetInstance().Initialize(map[string]string{"server1": os.Getenv("REDIS_HOST")})
 	err = storage.GetInstance().Initialize(
-		context.Background(),
+		ctx,
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB"),
 	)
