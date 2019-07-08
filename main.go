@@ -20,7 +20,8 @@ func main() {
 	var err error
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
-	ctx, _ := context.WithTimeout(context.Background(), 2 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
 
 	if os.Getenv("ENV") == "prod" {
 		e.Logger.SetLevel(log.INFO)
@@ -61,7 +62,7 @@ func main() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)

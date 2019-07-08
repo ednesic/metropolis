@@ -17,6 +17,9 @@ var (
 	once     sync.Once
 )
 
+//MongoContext for specific session context for mongo-go-driver transaction
+type MongoContext mongo.SessionContext
+
 //DataAccessLayer is an interface for db connection
 type DataAccessLayer interface {
 	Insert(context.Context, string, interface{}) error
@@ -25,7 +28,7 @@ type DataAccessLayer interface {
 	Count(context.Context, string, map[string]interface{}) (int64, error)
 	Update(context.Context, string, map[string]interface{}, interface{}) error
 	Remove(context.Context, string, map[string]interface{}) error
-	WithTransaction(context.Context, func(context.Context) error) error
+	WithTransaction(context.Context, func(MongoContext) error) error
 	Initialize(context.Context, string, string) error
 	Disconnect()
 }
@@ -60,7 +63,7 @@ func (m *mongodbImpl) Initialize(ctx context.Context, dbURI, dbName string) erro
 	return nil
 }
 
-func (m *mongodbImpl) WithTransaction(ctx context.Context, fn func(context.Context) error) error {
+func (m *mongodbImpl) WithTransaction(ctx context.Context, fn func(MongoContext) error) error {
 	return m.client.UseSession(ctx, func(sessionContext mongo.SessionContext) error {
 		err := sessionContext.StartTransaction()
 		if err != nil {

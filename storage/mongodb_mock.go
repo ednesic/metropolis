@@ -12,7 +12,7 @@ type DataAccessLayerMock struct {
 }
 
 //WithTransaction is a mock for db WithTransaction
-func (m *DataAccessLayerMock) WithTransaction(ctx context.Context, fn func(context.Context) error) error {
+func (m *DataAccessLayerMock) WithTransaction(ctx context.Context, fn func(MongoContext) error) error {
 	args := m.Called(ctx, fn)
 	return args.Error(0)
 }
