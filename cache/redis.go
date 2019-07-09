@@ -24,7 +24,7 @@ type Cache interface {
 }
 
 type rImpl struct {
-	Codec *cache.Codec
+	codec *cache.Codec
 	ring  *redis.Ring
 }
 
@@ -42,7 +42,7 @@ func (rc *rImpl) Initialize(hosts map[string]string) {
 	rc.ring = redis.NewRing(&redis.RingOptions{
 		Addrs: hosts,
 	})
-	rc.Codec = &cache.Codec{
+	rc.codec = &cache.Codec{
 		Redis: rc.ring,
 
 		Marshal: func(v interface{}) ([]byte, error) {
@@ -55,21 +55,21 @@ func (rc *rImpl) Initialize(hosts map[string]string) {
 }
 
 func (rc *rImpl) Get(key string, object interface{}) error {
-	if err := rc.Codec.Get(key, object); err != nil {
+	if err := rc.codec.Get(key, object); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
 func (rc *rImpl) Set(k string, obj interface{}, d time.Duration) error {
-	if err := rc.Codec.Set(&cache.Item{Key: k, Object: obj, Expiration: d}); err != nil {
+	if err := rc.codec.Set(&cache.Item{Key: k, Object: obj, Expiration: d}); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
 func (rc *rImpl) Delete(key string) error {
-	if err := rc.Codec.Delete(key); err != nil {
+	if err := rc.codec.Delete(key); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
