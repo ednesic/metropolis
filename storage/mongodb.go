@@ -60,7 +60,7 @@ func (m *mongodbImpl) Initialize(ctx context.Context, dbURI, dbName string) erro
 	return nil
 }
 
-func (m *mongodbImpl) WithTransaction(ctx context.Context, fn func(context.Context) error) error {
+func (m mongodbImpl) WithTransaction(ctx context.Context, fn func(context.Context) error) error {
 	return m.client.UseSession(ctx, func(sessionContext mongo.SessionContext) error {
 		err := sessionContext.StartTransaction()
 		if err != nil {
@@ -75,13 +75,13 @@ func (m *mongodbImpl) WithTransaction(ctx context.Context, fn func(context.Conte
 }
 
 // Insert stores documents in the collection
-func (m *mongodbImpl) Insert(ctx context.Context, collName string, doc interface{}) error {
+func (m mongodbImpl) Insert(ctx context.Context, collName string, doc interface{}) error {
 	_, err := m.client.Database(m.dbName).Collection(collName).InsertOne(ctx, doc)
 	return err
 }
 
 // Find finds all documents in the collection
-func (m *mongodbImpl) Find(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) error {
+func (m mongodbImpl) Find(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) error {
 	cur, err := m.client.Database(m.dbName).Collection(collName).Find(ctx, query)
 	if err != nil {
 		return err
@@ -114,28 +114,28 @@ func (m *mongodbImpl) Find(ctx context.Context, collName string, query map[strin
 }
 
 // FindOne finds one document in mongo
-func (m *mongodbImpl) FindOne(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) error {
+func (m mongodbImpl) FindOne(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) error {
 	return m.client.Database(m.dbName).Collection(collName).FindOne(ctx, query).Decode(doc)
 }
 
 // Update updates one or more documents in the collection
-func (m *mongodbImpl) Update(ctx context.Context, collName string, selector map[string]interface{}, update interface{}) error {
+func (m mongodbImpl) Update(ctx context.Context, collName string, selector map[string]interface{}, update interface{}) error {
 	_, err := m.client.Database(m.dbName).Collection(collName).UpdateOne(ctx, selector, update)
 	return err
 }
 
 // Remove one or more documents in the collection
-func (m *mongodbImpl) Remove(ctx context.Context, collName string, selector map[string]interface{}) error {
+func (m mongodbImpl) Remove(ctx context.Context, collName string, selector map[string]interface{}) error {
 	_, err := m.client.Database(m.dbName).Collection(collName).DeleteOne(ctx, selector)
 	return err
 }
 
 // Count returns the number of documents of the query
-func (m *mongodbImpl) Count(ctx context.Context, collName string, query map[string]interface{}) (int64, error) {
+func (m mongodbImpl) Count(ctx context.Context, collName string, query map[string]interface{}) (int64, error) {
 	return m.client.Database(m.dbName).Collection(collName).CountDocuments(ctx, query)
 }
 
-func (m *mongodbImpl) Disconnect() {
+func (m mongodbImpl) Disconnect() {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	_ = m.client.Disconnect(ctx)
