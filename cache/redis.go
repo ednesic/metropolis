@@ -54,27 +54,27 @@ func (rc *rImpl) Initialize(hosts map[string]string) {
 	}
 }
 
-func (rc rImpl) Get(key string, object interface{}) error {
+func (rc *rImpl) Get(key string, object interface{}) error {
 	if err := rc.codec.Get(key, object); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
-func (rc rImpl) Set(k string, obj interface{}, d time.Duration) error {
+func (rc *rImpl) Set(k string, obj interface{}, d time.Duration) error {
 	if err := rc.codec.Set(&cache.Item{Key: k, Object: obj, Expiration: d}); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
-func (rc rImpl) Delete(key string) error {
+func (rc *rImpl) Delete(key string) error {
 	if err := rc.codec.Delete(key); err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
 	return nil
 }
 
-func (rc rImpl) Disconnect() {
+func (rc *rImpl) Disconnect() {
 	_ = rc.ring.Close()
 }
