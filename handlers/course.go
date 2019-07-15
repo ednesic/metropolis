@@ -13,7 +13,7 @@ import (
 //GetCourse is a handler to get course passing a query parameter name
 func GetCourse(c echo.Context) error {
 	name := c.Param("name")
-	cr, err := courseservice.GetInstance().FindOne(name)
+	cr, err := courseservice.GetInstance().FindOne(c.Request().Context(), name)
 	httpStatus := http.StatusOK
 
 	if serr, ok := err.(*cache.RedisErr); ok {
@@ -33,7 +33,7 @@ func GetCourse(c echo.Context) error {
 
 //GetCourses is a handler to get all courses
 func GetCourses(c echo.Context) error {
-	cs, err := courseservice.GetInstance().FindAll()
+	cs, err := courseservice.GetInstance().FindAll(c.Request().Context())
 
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
@@ -58,7 +58,7 @@ func SetCourse(c echo.Context) error {
 		return err
 	}
 
-	err := courseservice.GetInstance().Create(cr)
+	err := courseservice.GetInstance().Create(c.Request().Context(), cr)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil
@@ -80,7 +80,7 @@ func PutCourse(c echo.Context) error {
 		return err
 	}
 
-	err := courseservice.GetInstance().Update(cr)
+	err := courseservice.GetInstance().Update(c.Request().Context(), cr)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil
@@ -98,7 +98,7 @@ func DelCourse(c echo.Context) error {
 	name := c.Param("name")
 	httpStatus := http.StatusOK
 
-	err := courseservice.GetInstance().Delete(name)
+	err := courseservice.GetInstance().Delete(c.Request().Context(), name)
 	if serr, ok := err.(*cache.RedisErr); ok {
 		c.Logger().Warn(serr)
 		err = nil

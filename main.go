@@ -8,16 +8,17 @@ import (
 
 	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/handlers"
-	"github.com/ednesic/coursemanagement/metrics"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.elastic.co/apm/module/apmechov4"
 )
 
 func main() {
 	var err error
+	// var serviceName = "course"
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
@@ -38,10 +39,14 @@ func main() {
 		e.Logger.Fatal("Could not resolve Data access layer: ", err)
 	}
 
-	e.Use(middleware.Recover())
+	// apm.DefaultTracer.Service.Name = serviceName
+	// opentracing.InitGlobalTracer(apmot.New())
+
+	// e.Use(opentracingMid.OpenTracing(serviceName))
+	e.Use(apmechov4.Middleware())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.BodyLimit("2M"))
-	e.Use(metrics.NewMetric())
+	//e.Use(metrics.NewMetric())
 	e.Use(middleware.Logger())
 
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))

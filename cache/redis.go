@@ -1,6 +1,8 @@
 package cache
 
 import (
+	"context"
+	"go.elastic.co/apm/module/apmgoredis"
 	"sync"
 	"time"
 
@@ -16,7 +18,7 @@ var (
 
 //Cache is an interface to handle cache
 type Cache interface {
-	Get(string, interface{}) error
+	Get(context.Context, string, interface{}) error
 	Set(string, interface{}, time.Duration) error
 	Delete(string) error
 	Initialize(map[string]string)
@@ -54,11 +56,14 @@ func (rc *rImpl) Initialize(hosts map[string]string) {
 	}
 }
 
-func (rc *rImpl) Get(key string, object interface{}) error {
-	if err := rc.codec.Get(key, object); err != nil {
+func (rc *rImpl) Get(ctx context.Context, key string, object interface{}) error {
+	var b []byte
+	client := apmgoredis.Wrap(rc.ring).WithContext(ctx)
+	b, err := client.Get(key).Bytes()
+	if err != nil {
 		return &RedisErr{Msg: err.Error()}
 	}
-	return nil
+	return msgpack.Unmarshal(b, object)
 }
 
 func (rc *rImpl) Set(k string, obj interface{}, d time.Duration) error {

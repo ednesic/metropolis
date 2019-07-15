@@ -19,11 +19,11 @@ var (
 
 //CourseService is an interface for course service
 type CourseService interface {
-	Create(types.Course) error
-	Update(types.Course) error
-	FindAll() ([]types.Course, error)
-	Delete(string) error
-	FindOne(string) (types.Course, error)
+	Create(context.Context, types.Course) error
+	Update(context.Context, types.Course) error
+	FindAll(context.Context) ([]types.Course, error)
+	Delete(context.Context, string) error
+	FindOne(context.Context, string) (types.Course, error)
 }
 
 type courseImpl struct{}
@@ -38,11 +38,11 @@ func GetInstance() CourseService {
 	return instance
 }
 
-func (s courseImpl) FindOne(name string) (c types.Course, err error) {
+func (s courseImpl) FindOne(ctx context.Context, name string) (c types.Course, err error) {
 	var mgoErr error
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	if err := cache.GetInstance().Get(coll+name, &c); err != nil {
+	if err := cache.GetInstance().Get(ctx, coll+name, &c); err != nil {
 		if mgoErr = storage.GetInstance().FindOne(ctx, coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
 			return c, cache.GetInstance().Set(coll+name, c, time.Minute)
 		}
@@ -50,8 +50,8 @@ func (s courseImpl) FindOne(name string) (c types.Course, err error) {
 	return c, mgoErr
 }
 
-func (s courseImpl) Create(course types.Course) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+func (s courseImpl) Create(ctx context.Context, course types.Course) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	err := storage.GetInstance().Insert(ctx, coll, course)
 	if err == nil {
@@ -60,8 +60,8 @@ func (s courseImpl) Create(course types.Course) error {
 	return err
 }
 
-func (s courseImpl) Update(course types.Course) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+func (s courseImpl) Update(ctx context.Context, course types.Course) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	err := storage.
 		GetInstance().
@@ -72,14 +72,14 @@ func (s courseImpl) Update(course types.Course) error {
 	return err
 }
 
-func (s courseImpl) FindAll() ([]types.Course, error) {
+func (s courseImpl) FindAll(ctx context.Context) ([]types.Course, error) {
 	var mgoErr error
 	var cs []types.Course
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	suffixKey := "all"
 
-	if cacheErr := cache.GetInstance().Get(coll+suffixKey, &cs); cacheErr != nil {
+	if cacheErr := cache.GetInstance().Get(ctx, coll+suffixKey, &cs); cacheErr != nil {
 		if mgoErr = storage.GetInstance().Find(ctx, coll, map[string]interface{}{}, &cs); mgoErr == nil {
 			return cs, cache.GetInstance().Set(coll+suffixKey, cs, time.Minute)
 		}
@@ -87,8 +87,8 @@ func (s courseImpl) FindAll() ([]types.Course, error) {
 	return cs, mgoErr
 }
 
-func (s courseImpl) Delete(name string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+func (s courseImpl) Delete(ctx context.Context, name string) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	err := storage.GetInstance().Remove(ctx, coll, map[string]interface{}{"name": name})
 	if err == nil {

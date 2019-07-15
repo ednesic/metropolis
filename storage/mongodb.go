@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"go.elastic.co/apm/module/apmmongo"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -46,7 +47,7 @@ type mongodbImpl struct {
 }
 
 func (m *mongodbImpl) Initialize(ctx context.Context, dbURI, dbName string) error {
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI).SetMonitor(apmmongo.CommandMonitor()))
 	if err != nil {
 		return err
 	}
