@@ -12,6 +12,7 @@ require (
 	github.com/prometheus/client_golang v1.0.0
 	github.com/prometheus/common v0.6.0 // indirect
 	github.com/prometheus/procfs v0.0.3 // indirect
+	github.com/rs/zerolog v1.14.3
 	github.com/stretchr/testify v1.3.0
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
@@ -20,6 +21,7 @@ require (
 	go.elastic.co/apm/module/apmgoredis v1.4.0
 	go.elastic.co/apm/module/apmmongo v1.4.0
 	go.elastic.co/apm/module/apmot v1.4.0
+	go.elastic.co/apm/module/apmzerolog v1.4.0
 	go.mongodb.org/mongo-driver v1.0.3
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7 // indirect

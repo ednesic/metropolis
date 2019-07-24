@@ -38,14 +38,22 @@ func GetInstance() CourseService {
 	return instance
 }
 
-func (s courseImpl) FindOne(ctx context.Context, name string) (c types.Course, err error) {
-	var mgoErr error
+func (s courseImpl) FindOne(ctx context.Context, name string) (types.Course, error) {
+	var c types.Course
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	if err := cache.GetInstance().Get(ctx, coll+name, &c); err != nil {
-		if mgoErr = storage.GetInstance().FindOne(ctx, coll, map[string]interface{}{"name": name}, &c); mgoErr == nil {
-			return c, cache.GetInstance().Set(coll+name, c, time.Minute)
-		}
+
+	err := cache.GetInstance().Get(ctx, coll+name, &c)
+	if err == nil {
+		return c, nil
+	}
+	mgoErr := storage.GetInstance().FindOne(ctx, coll, map[string]interface{}{"name": name}, &c)
+	if mgoErr == nil {
+		_ = cache.GetInstance().Set(coll+name, c, time.Minute)
+		return c, nil
+	}
+	if mgoErr == storage.ErrNotFound {
+		return c, nil
 	}
 	return c, mgoErr
 }
