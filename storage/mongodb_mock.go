@@ -24,9 +24,9 @@ func (m *DataAccessLayerMock) Initialize(ctx context.Context, dbURI, dbName stri
 }
 
 //Insert is a mock for db Insert
-func (m *DataAccessLayerMock) Insert(ctx context.Context, collName string, doc interface{}) error {
+func (m *DataAccessLayerMock) Insert(ctx context.Context, collName string, doc interface{}) (interface{}, error) {
 	args := m.Called(ctx, collName, doc)
-	return args.Error(0)
+	return args.Get(0), args.Error(1)
 }
 
 //FindOne is a mock for db FindOne

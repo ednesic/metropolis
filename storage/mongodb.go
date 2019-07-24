@@ -20,7 +20,7 @@ var (
 
 //DataAccessLayer is an interface for db connection
 type DataAccessLayer interface {
-	Insert(context.Context, string, interface{}) error
+	Insert(context.Context, string, interface{}) (interface{}, error)
 	Find(context.Context, string, map[string]interface{}, interface{}) error
 	FindOne(context.Context, string, map[string]interface{}, interface{}) error
 	Count(context.Context, string, map[string]interface{}) (int64, error)
@@ -76,9 +76,9 @@ func (m *mongodbImpl) WithTransaction(ctx context.Context, fn func(context.Conte
 }
 
 // Insert stores documents in the collection
-func (m *mongodbImpl) Insert(ctx context.Context, collName string, doc interface{}) error {
-	_, err := m.client.Database(m.dbName).Collection(collName).InsertOne(ctx, doc)
-	return err
+func (m *mongodbImpl) Insert(ctx context.Context, collName string, doc interface{}) (interface{}, error) {
+	res, err := m.client.Database(m.dbName).Collection(collName).InsertOne(ctx, doc)
+	return res.InsertedID, err
 }
 
 // Find finds all documents in the collection
