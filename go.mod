@@ -21,9 +21,12 @@ require (
 	go.elastic.co/apm/module/apmechov4 v1.4.0
 	go.elastic.co/apm/module/apmgoredis v1.4.0
 	go.elastic.co/apm/module/apmmongo v1.4.0
+	go.elastic.co/apm/module/apmzap v1.4.0
 	go.mongodb.org/mongo-driver v1.0.4
+	go.uber.org/atomic v1.4.0 // indirect
+	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
-	golang.org/x/net v0.0.0-20190628185345-da137c7871d7 // indirect
+	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80 // indirect
 	golang.org/x/sys v0.0.0-20190712062909-fae7ac547cb7 // indirect
 	google.golang.org/appengine v1.6.1 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce

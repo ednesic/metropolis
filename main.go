@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/ednesic/coursemanagement/middlewares"
 	"os"
 	"os/signal"
 	"time"
@@ -44,7 +45,7 @@ func main() {
 	e.Use(apmechov4.Middleware())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.BodyLimit("2M"))
-	e.Use(middleware.Logger())
+	e.Use(middlewares.Logger())
 
 	gCourse := e.Group("/courses")
 	gCourse.DELETE("/:name", handlers.DelCourse)

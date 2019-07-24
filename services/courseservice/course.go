@@ -61,7 +61,7 @@ func (s courseImpl) FindOne(ctx context.Context, name string) (types.Course, err
 func (s courseImpl) Create(ctx context.Context, course types.Course) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	err := storage.GetInstance().Insert(ctx, coll, course)
+	_, err := storage.GetInstance().Insert(ctx, coll, course)
 	if err == nil {
 		return cache.GetInstance().Set(coll+course.Name, course, time.Minute)
 	}
