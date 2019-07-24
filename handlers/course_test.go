@@ -9,7 +9,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ednesic/coursemanagement/cache"
 	"github.com/ednesic/coursemanagement/services/courseservice"
 	"github.com/ednesic/coursemanagement/storage"
 	"github.com/ednesic/coursemanagement/types"
@@ -35,7 +34,7 @@ func TestGetCourse(t *testing.T) {
 		want   wants
 	}{
 		{"Status ok", fields{name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status ok but redis err", fields{mockErr: &cache.RedisErr{}, name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
+		{"Status ok but redis err", fields{mockErr: errors.New("err"), name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
 		{"Status notFound", fields{mockErr: storage.ErrNotFound, name: "nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
 		{"Status internal server error", fields{mockErr: mgo.ErrCursor, name: "nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
 	}
@@ -97,7 +96,7 @@ func TestGetCourses(t *testing.T) {
 		want wants
 	}{
 		{"Status ok", mocks{courses: []types.Course{{}, {}}, err: nil}, wants{courses: []types.Course{{}, {}}, err: nil, statusCode: http.StatusOK}},
-		{"Status ok but redis err", mocks{courses: []types.Course{{}, {}}, err: &cache.RedisErr{}}, wants{courses: []types.Course{{}, {}}, err: nil, statusCode: http.StatusOK}},
+		{"Status ok but redis err", mocks{courses: []types.Course{{}, {}}, err: errors.New("err")}, wants{courses: []types.Course{{}, {}}, err: nil, statusCode: http.StatusOK}},
 		{"Status ok(empty)", mocks{courses: nil, err: nil}, wants{courses: []types.Course{}, err: nil, statusCode: http.StatusOK}},
 		{"Status internal server error", mocks{courses: nil, err: mgo.ErrCursor}, wants{courses: []types.Course{}, err: mgo.ErrCursor, statusCode: http.StatusInternalServerError}},
 	}
@@ -159,7 +158,7 @@ func TestSetCourse(t *testing.T) {
 		field fields
 	}{
 		{"Status ok", wants{statusCode: http.StatusOK}, mocks{mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
-		{"Status ok but redis err", wants{statusCode: http.StatusOK}, mocks{err: &cache.RedisErr{}, mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
+		{"Status ok but redis err", wants{statusCode: http.StatusOK}, mocks{err: errors.New("err"), mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
 		{"Status bad request", wants{statusCode: http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
 		{"Status internal server error", wants{statusCode: http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
 	}
@@ -228,7 +227,7 @@ func TestPutCourse(t *testing.T) {
 		field fields
 	}{
 		{"Status ok", wants{statusCode: http.StatusCreated}, mocks{mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
-		{"Status ok but redis err", wants{statusCode: http.StatusCreated}, mocks{err: &cache.RedisErr{}, mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
+		{"Status ok but redis err", wants{statusCode: http.StatusCreated}, mocks{err: errors.New("err"), mongoMockTimes: 1, course: types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
 		{"Status bad request", wants{statusCode: http.StatusBadRequest, err: &echo.HTTPError{}}, mocks{}, fields{"{err}"}},
 		{"Status internal server error", wants{statusCode: http.StatusInternalServerError, err: errors.New("")}, mocks{mongoMockTimes: 1, err: mgo.ErrCursor}, fields{types.Course{Name: "Test123", Price: 10, Picture: "test.png", PreviewURLVideo: "http://video"}}},
 	}
@@ -293,7 +292,7 @@ func TestDelCourse(t *testing.T) {
 		want   wants
 	}{
 		{"Status ok", fields{name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
-		{"Status ok but redis err", fields{err: &cache.RedisErr{}, name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
+		{"Status ok but redis err", fields{err: errors.New("err"), name: "nameTest"}, wants{course: types.Course{Name: "nameTest", Price: 10, Picture: "pic.png", PreviewURLVideo: "http://video"}, statusCode: http.StatusOK, err: nil}},
 		{"Status notFound", fields{err: storage.ErrNotFound, name: "nameNotFound"}, wants{course: types.Course{}, statusCode: http.StatusNotFound, err: storage.ErrNotFound}},
 		{"Status internal server error", fields{err: mgo.ErrCursor, name: "nameInternal"}, wants{course: types.Course{}, statusCode: http.StatusInternalServerError, err: mgo.ErrCursor}},
 	}

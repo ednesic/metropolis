@@ -19,8 +19,8 @@ var (
 //Cache is an interface to handle cache
 type Cache interface {
 	Get(context.Context, string, interface{}) error
-	Set(string, interface{}, time.Duration) error
-	Delete(string) error
+	Set(context.Context, string, interface{}, time.Duration) error
+	Delete(context.Context, string) error
 	Initialize(map[string]string)
 	Disconnect()
 }
@@ -61,21 +61,23 @@ func (rc *rImpl) Get(ctx context.Context, key string, object interface{}) error 
 	client := apmgoredis.Wrap(rc.ring).WithContext(ctx)
 	b, err := client.Get(key).Bytes()
 	if err != nil {
-		return &RedisErr{Msg: err.Error()}
+		return err
 	}
 	return msgpack.Unmarshal(b, object)
 }
 
-func (rc *rImpl) Set(k string, obj interface{}, d time.Duration) error {
-	if err := rc.codec.Set(&cache.Item{Key: k, Object: obj, Expiration: d}); err != nil {
-		return &RedisErr{Msg: err.Error()}
+func (rc *rImpl) Set(ctx context.Context, k string, obj interface{}, d time.Duration) error {
+	client := apmgoredis.Wrap(rc.ring).WithContext(ctx)
+	if err := client.Set(k, obj, d).Err(); err != nil {
+		return err
 	}
 	return nil
 }
 
-func (rc *rImpl) Delete(key string) error {
-	if err := rc.codec.Delete(key); err != nil {
-		return &RedisErr{Msg: err.Error()}
+func (rc *rImpl) Delete(ctx context.Context, key string) error {
+	client := apmgoredis.Wrap(rc.ring).WithContext(ctx)
+	if err := client.Del(key).Err(); err != nil {
+		return err
 	}
 	return nil
 }

@@ -49,7 +49,7 @@ func (s courseImpl) FindOne(ctx context.Context, name string) (types.Course, err
 	}
 	mgoErr := storage.GetInstance().FindOne(ctx, coll, map[string]interface{}{"name": name}, &c)
 	if mgoErr == nil {
-		_ = cache.GetInstance().Set(coll+name, c, time.Minute)
+		_ = cache.GetInstance().Set(ctx, coll+name, c, time.Minute)
 		return c, nil
 	}
 	if mgoErr == storage.ErrNotFound {
@@ -63,7 +63,7 @@ func (s courseImpl) Create(ctx context.Context, course types.Course) error {
 	defer cancel()
 	_, err := storage.GetInstance().Insert(ctx, coll, course)
 	if err == nil {
-		return cache.GetInstance().Set(coll+course.Name, course, time.Minute)
+		return cache.GetInstance().Set(ctx, coll+course.Name, course, time.Minute)
 	}
 	return err
 }
@@ -75,24 +75,27 @@ func (s courseImpl) Update(ctx context.Context, course types.Course) error {
 		GetInstance().
 		Update(ctx, coll, map[string]interface{}{"name": course.Name}, map[string]interface{}{"$set": &course})
 	if err == nil {
-		return cache.GetInstance().Delete(coll + course.Name)
+		return cache.GetInstance().Delete(ctx, coll + course.Name)
 	}
 	return err
 }
 
 func (s courseImpl) FindAll(ctx context.Context) ([]types.Course, error) {
-	var mgoErr error
 	var cs []types.Course
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	suffixKey := "all"
 
-	if cacheErr := cache.GetInstance().Get(ctx, coll+suffixKey, &cs); cacheErr != nil {
-		if mgoErr = storage.GetInstance().Find(ctx, coll, map[string]interface{}{}, &cs); mgoErr == nil {
-			return cs, cache.GetInstance().Set(coll+suffixKey, cs, time.Minute)
-		}
+	err := cache.GetInstance().Get(ctx, coll+suffixKey, &cs)
+	if err == nil {
+		return cs, nil
 	}
-	return cs, mgoErr
+	err = storage.GetInstance().Find(ctx, coll, map[string]interface{}{}, &cs)
+	if err == nil {
+		_ = cache.GetInstance().Set(ctx, coll+suffixKey, cs, time.Minute)
+		return cs, nil
+	}
+	return cs, err
 }
 
 func (s courseImpl) Delete(ctx context.Context, name string) error {
@@ -100,7 +103,7 @@ func (s courseImpl) Delete(ctx context.Context, name string) error {
 	defer cancel()
 	err := storage.GetInstance().Remove(ctx, coll, map[string]interface{}{"name": name})
 	if err == nil {
-		return cache.GetInstance().Delete(coll + name)
+		return cache.GetInstance().Delete(ctx, coll + name)
 	}
 	return err
 }

@@ -26,7 +26,7 @@ func TestCourseFindOne_FindsCourseCached(t *testing.T) {
 		}).Once()
 	courseService := courseImpl{}
 
-	c, err := courseService.FindOne(testName)
+	c, err := courseService.FindOne(context.Background(), testName)
 	assert.Nil(t, err)
 	assert.Equal(t, c, redisCourseMock)
 
@@ -51,7 +51,7 @@ func TestCourseFindOne_DoNotFindCourseCached(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	c, err := courseService.FindOne(testName)
+	c, err := courseService.FindOne(context.Background(), testName)
 	assert.Nil(t, err)
 	assert.Equal(t, c, mongoCourseMock)
 
@@ -70,7 +70,7 @@ func TestCourseCreate_ErrOnInsert(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Create(testCourse)
+	err := courseService.Create(context.Background(), testCourse)
 	assert.Equal(t, err, errMock)
 	mongoMock.AssertExpectations(t)
 }
@@ -89,7 +89,7 @@ func TestCourseCreate_ErrOnCache(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Create(testCourse)
+	err := courseService.Create(context.Background(), testCourse)
 	assert.Equal(t, errMock, err)
 	mongoMock.AssertExpectations(t)
 	redisMock.AssertExpectations(t)
@@ -108,7 +108,7 @@ func TestCourseCreate_Success(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Create(testCourse)
+	err := courseService.Create(context.Background(), testCourse)
 	assert.Nil(t, err)
 	mongoMock.AssertExpectations(t)
 	redisMock.AssertExpectations(t)
@@ -125,7 +125,7 @@ func TestCourseUpdate_ErrUpdate(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Update(testCourse)
+	err := courseService.Update(context.Background(), testCourse)
 	assert.Equal(t, err, errMock)
 	mongoMock.AssertExpectations(t)
 }
@@ -144,7 +144,7 @@ func TestCourseUpdate_ErrCache(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Update(testCourse)
+	err := courseService.Update(context.Background(), testCourse)
 	assert.Equal(t, err, errMock)
 	mongoMock.AssertExpectations(t)
 	redisMock.AssertExpectations(t)
@@ -163,7 +163,7 @@ func TestCourseUpdate_Success(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Update(testCourse)
+	err := courseService.Update(context.Background(), testCourse)
 	assert.Nil(t, err)
 	mongoMock.AssertExpectations(t)
 	redisMock.AssertExpectations(t)
@@ -183,7 +183,7 @@ func TestCourseFindAll_SuccessGetCache(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	c, err := courseService.FindAll()
+	c, err := courseService.FindAll(context.Background())
 	assert.Nil(t, err)
 	assert.Equal(t, c, redisCourseMock)
 
@@ -203,7 +203,7 @@ func TestCourseFindAll_ErrGet(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	c, err := courseService.FindAll()
+	c, err := courseService.FindAll(context.Background())
 	assert.Equal(t, err, errMock)
 	assert.Len(t, c, 0)
 
@@ -225,7 +225,7 @@ func TestCourseFindAll_ErrSetCache(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	c, err := courseService.FindAll()
+	c, err := courseService.FindAll(context.Background())
 	assert.Equal(t, errMock, err)
 	assert.Len(t, c, 0)
 
@@ -250,7 +250,7 @@ func TestCourseFindAll_Success(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	c, err := courseService.FindAll()
+	c, err := courseService.FindAll(context.Background())
 	assert.Nil(t, err)
 	assert.Equal(t, c, mongoCourseMock)
 
@@ -267,7 +267,7 @@ func TestCourseDelete_ErrDelete(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Delete(testCourse)
+	err := courseService.Delete(context.Background(), testCourse)
 	assert.Equal(t, err, errMock)
 
 	mongoMock.AssertExpectations(t)
@@ -286,7 +286,7 @@ func TestCourseDelete_ErrCache(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Delete(testCourse)
+	err := courseService.Delete(context.Background(), testCourse)
 	assert.Equal(t, err, errMock)
 
 	redisMock.AssertExpectations(t)
@@ -305,7 +305,7 @@ func TestCourseDelete_Success(t *testing.T) {
 
 	courseService := courseImpl{}
 
-	err := courseService.Delete(testCourse)
+	err := courseService.Delete(context.Background(), testCourse)
 	assert.Nil(t, err)
 
 	redisMock.AssertExpectations(t)
